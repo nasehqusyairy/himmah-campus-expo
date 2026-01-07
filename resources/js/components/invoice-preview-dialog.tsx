@@ -1,0 +1,190 @@
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Button } from "./ui/button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "./ui/dialog";
+import { toDataURL } from "qrcode";
+import { User } from "@/types";
+import { paymentFile } from "@/routes";
+import { Table, TableBody, TableCell, TableHead, TableRow } from "./ui/table";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
+import axios, { AxiosError } from "axios";
+import { accept, reject } from "@/routes/validating";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
+import { toast } from "sonner";
+import { Spinner } from "./ui/spinner";
+
+type Props = {
+    setUser: Dispatch<SetStateAction<User | undefined>>
+    user: User | undefined
+}
+
+export default function InvoicePreviewDialog({ user, setUser }: Props) {
+    const [message, setMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    return (
+        <Dialog open={user !== undefined} onOpenChange={() => setUser(undefined)}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Detail</DialogTitle>
+                </DialogHeader>
+                <div className="max-h-[70vh] overflow-auto">
+                    <Table>
+                        <TableBody>
+                            <TableRow>
+                                <TableHead colSpan={2}>
+                                    Identitas Pengguna
+                                    : </TableHead>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    Nama
+                                </TableCell>
+                                <TableCell className="flex items-center gap-1">
+                                    <span>:</span>
+                                    <span className="inline-block w-44 text-wrap">{user?.name}</span>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    No. Whatsapp
+                                </TableCell>
+                                <TableCell>: <a target="_blank" className="text-primary underline" href={"https://wa.me/+62" + user?.invoice.wa}>{user?.invoice.wa}</a></TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    Jenis Instansi
+                                </TableCell>
+                                <TableCell>: {user?.invoice.agency?.level.name}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>
+                                    Nama Instansi
+                                </TableCell>
+                                <TableCell className="flex items-center gap-1">
+                                    <span>:</span>
+                                    <span className="inline-block w-44 text-wrap">{user?.invoice.agency?.name}</span>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableHead colSpan={2}>Peserta yang Didaftarkan: </TableHead>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell colSpan={2}>
+                                    <ol className="list-decimal pl-12">
+                                        {user?.invoice.participants.map(el => (
+                                            <li className="mb-2" key={el.id}>{el.name}</li>
+                                        ))}
+                                    </ol>
+                                </TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableHead colSpan={2}>Bukti Pembayaran: </TableHead>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell colSpan={2}>
+                                    {user?.invoice.payment_file ? (
+                                        <img src={paymentFile().url + '?path=' + user?.invoice.payment_file} alt="" />
+
+                                    ) : (
+                                        <div className="border-dashed border rounded-md aspect-video flex justify-center items-center">
+                                            <span>Tidak ada bukti pembayaran</span>
+                                        </div>
+                                    )}
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </div>
+                {(!user?.invoice.verified_at && user?.step.last === 3) && (
+                    <DialogFooter>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button variant={'destructive'}>
+                                    Tolak
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Tolak Pendaftaran?</AlertDialogTitle>
+                                </AlertDialogHeader>
+                                <p className="mb-4">
+                                    Pengguna akan mengulang proses pendaftaran dari awal, tapi data akan tetap disimpan. Aksi ini tidak dapat dikembalikan. Apakah Anda yakin?
+                                </p>
+                                <form onSubmit={(evt) => evt.preventDefault()}>
+                                    <Label>Apa alasan Anda menolaknya?</Label>
+                                    <Textarea name="message" value={message} onChange={e => setMessage(e.target.value)} />
+                                </form>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Batal</AlertDialogCancel>
+                                    <AlertDialogAction disabled={isLoading} onClick={() => {
+                                        setIsLoading(true)
+                                        axios.post(reject().url, {
+                                            invoice_id: user.invoice.id,
+                                            message
+                                        }).then(({ data: res }) => {
+                                            toast.success(res.message)
+                                        }).catch(err => {
+                                            let message
+                                            if (err instanceof AxiosError) {
+                                                message = err.response?.data.message
+                                            }
+                                            toast.error('Terjadi Kesalahan', {
+                                                description: `${message}`
+                                            })
+                                        }).finally(() => {
+                                            setIsLoading(false)
+                                        })
+                                    }}>
+                                        {isLoading ? (<>
+                                            <Spinner /> Mengonfirmasi
+                                        </>) : 'Konfirmasi'}
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button>
+                                    Terima
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Terima Pendaftaran?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        Peserta yang didaftarkan pengguna akan memperoleh QR dan berhak melakukan presensi. Aksi ini tidak dapat dikembalikan. Apakah Anda yakin?
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Batal</AlertDialogCancel>
+                                    <AlertDialogAction disabled={isLoading} onClick={() => {
+                                        setIsLoading(true)
+                                        axios.post(accept().url, {
+                                            id: user.invoice.id
+                                        }).then(({ data: res }) => {
+                                            toast.success(res.message)
+                                        }).catch(err => {
+                                            let message
+                                            if (err instanceof AxiosError) {
+                                                message = err.response?.data.message
+                                            }
+                                            toast.error('Terjadi Kesalahan', {
+                                                description: `${message}`
+                                            })
+                                        }).finally(() => {
+                                            setIsLoading(false)
+                                        })
+                                    }}>
+                                        {isLoading ? (<>
+                                            <Spinner /> Mengonfirmasi
+                                        </>) : 'Konfirmasi'}
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    </DialogFooter>
+                )}
+            </DialogContent>
+        </Dialog>
+    )
+}
