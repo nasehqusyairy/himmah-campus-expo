@@ -5,6 +5,7 @@ import InvoicePreviewDialog from "@/components/invoice-preview-dialog";
 import QRDialog from "@/components/qr-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import AppLayout from "@/layouts/app-layout"
 import participants from "@/routes/participants";
@@ -12,11 +13,12 @@ import validating from "@/routes/validating";
 import { BreadcrumbItem, Paginated, Participant, User } from "@/types";
 import { Form } from "@inertiajs/react";
 import { ColumnDef, getCoreRowModel, useReactTable, VisibilityState } from "@tanstack/react-table";
-import { QrCode, Search, SquareArrowOutUpRight } from "lucide-react";
-import { Dispatch, SetStateAction, useState } from "react";
+import axios from "axios";
+import { MoreVertical, QrCode, Search, SquareArrowOutUpRight } from "lucide-react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-function columnRefs(preview: User | undefined, setPreview: Dispatch<SetStateAction<User | undefined>>) {
+function columnRefs(setPreview: Dispatch<SetStateAction<number | undefined>>) {
     return [
         {
             id: 'order',
@@ -33,7 +35,19 @@ function columnRefs(preview: User | undefined, setPreview: Dispatch<SetStateActi
                     </div>
                 )
             }
-        }, {
+        },
+        {
+            id: 'wa',
+            header: 'WhatsApp',
+            cell: ({ row, }) => {
+                return (
+                    <a className="text-primary underline" href={"https://wa.me/+62" + row.original.invoice.wa} target="_blank">
+                        {row.original.invoice.wa}
+                    </a>
+                )
+            }
+        },
+        {
             id: 'status',
             header: 'Status',
             cell: ({ row }) => {
@@ -44,11 +58,11 @@ function columnRefs(preview: User | undefined, setPreview: Dispatch<SetStateActi
                     label = 'Valid'
                 } else {
                     if (last < 3) {
-                        variant = 'outline'
-                        label = 'Sedang mendaftar'
-                    } else {
                         variant = 'secondary'
-                        label = 'Butuh validasi'
+                        label = 'Mendaftar'
+                    } else {
+                        variant = 'destructive'
+                        label = 'Validasi'
                     }
                 }
 
@@ -62,9 +76,21 @@ function columnRefs(preview: User | undefined, setPreview: Dispatch<SetStateActi
             cell: ({ row }) => {
                 return (
                     <>
-                        <Button size={"icon"} onClick={() => setPreview(row.original)}>
+                        <Button size={"icon"} onClick={() => setPreview(row.index)}>
                             <SquareArrowOutUpRight />
                         </Button>
+                        {/* <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button size={"icon"} variant={"ghost"}>
+                                    <MoreVertical />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem>
+                                    <SquareArrowOutUpRight /> Detail
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu> */}
                     </>
                 )
             }
@@ -83,18 +109,22 @@ type Props = {
     users: Paginated<User>
 }
 
-export default ({ users }: Props) => {
-    const [preview, setPreview] = useState<User>();
+export default ({ users: paginatedUsers }: Props) => {
+    const [users, setUsers] = useState(paginatedUsers.data);
+    const [preview, setPreview] = useState<number>();
+
+    // console.log(users);
+
 
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
         agency: false,
         level: false
     })
 
-    const columns = columnRefs(preview, setPreview)
+    const columns = columnRefs(setPreview)
 
     const table = useReactTable({
-        data: users.data,
+        data: users,
         columns,
         getCoreRowModel: getCoreRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
@@ -117,8 +147,8 @@ export default ({ users }: Props) => {
                 <ColumnSelect table={{ ...table }} />
             </div>
             <DataTable columns={columns} table={{ ...table }} />
-            <DataTablePagination pagination={users} />
-            <InvoicePreviewDialog setUser={setPreview} user={preview} />
+            <DataTablePagination pagination={paginatedUsers} />
+            <InvoicePreviewDialog users={users} setUsers={setUsers} setUserIndex={setPreview} userIndex={preview} />
         </AppLayout>
     )
 }

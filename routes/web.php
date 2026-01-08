@@ -4,6 +4,7 @@ use App\Http\Controllers\AgencyController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\ValidatingController;
+use App\Http\Middleware\MemberOnly;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -34,7 +35,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/accept', [ValidatingController::class, 'accept'])->name('validating.accept');
         Route::post('/reject', [ValidatingController::class, 'reject'])->name('validating.reject');
     });
-    Route::prefix('registration')->group(function () {
+    Route::middleware(MemberOnly::class)->prefix('registration')->group(function () {
         Route::get('/', [RegistrationController::class, 'index'])->name('registration.index');
         Route::post('/user-identity', [RegistrationController::class, 'userIdentity'])->name('registration.user-identity');
         Route::post('/participant-names', [RegistrationController::class, 'participantNames'])->name('registration.participant-names');

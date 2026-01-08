@@ -4,13 +4,14 @@ import ParticipantIdentity from "@/components/participant-identity";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import UserIdentityForm from "@/components/user-identity-form";
 import VerificatingCard from "@/components/verificating-card";
+import VerifiedCard from "@/components/verified-card";
 import AppLayout from "@/layouts/app-layout";
 import registration from "@/routes/registration";
 import { Agency, BreadcrumbItem, Invoice, Option, Participant } from "@/types";
 import { Head } from "@inertiajs/react";
 import axios from "axios";
 import { Info, TriangleAlert } from "lucide-react";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -31,7 +32,26 @@ type Props = {
     }
 }
 
+
+function Layout({ children }: { children: ReactNode }) {
+    return (
+        <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title={breadcrumbs[0].title} />
+            {children}
+        </AppLayout>
+    )
+}
+
 export default function Registration({ levels = [], invoice: invc, step, price, account }: Props) {
+
+    if (invc.verified_at) {
+        return (
+            <Layout>
+                <VerifiedCard />
+            </Layout>
+        )
+    }
+
     if (!invc.agency) {
         invc.agency = {} as Agency
     }
@@ -59,8 +79,7 @@ export default function Registration({ levels = [], invoice: invc, step, price, 
     ]
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title={breadcrumbs[0].title} />
+        <Layout>
             <Alert className="mb-4">
                 <TriangleAlert />
                 <AlertTitle>Peringatan</AlertTitle>
@@ -69,6 +88,6 @@ export default function Registration({ levels = [], invoice: invc, step, price, 
                 </AlertDescription>
             </Alert>
             <WizardProvider steps={steps} initialStep={step || 0} />
-        </AppLayout>
+        </Layout>
     );
 }

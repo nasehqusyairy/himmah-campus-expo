@@ -14,15 +14,21 @@ import { toast } from "sonner";
 import { Spinner } from "./ui/spinner";
 
 type Props = {
-    setUser: Dispatch<SetStateAction<User | undefined>>
-    user: User | undefined
+    setUsers: Dispatch<SetStateAction<User[]>>
+    users: User[],
+    userIndex: number | undefined
+    setUserIndex: Dispatch<SetStateAction<number | undefined>>
 }
 
-export default function InvoicePreviewDialog({ user, setUser }: Props) {
-    const [message, setMessage] = useState('');
+export default function InvoicePreviewDialog({ users, setUsers, userIndex, setUserIndex }: Props) {
+    const [isAcceptDialogOpen, setIsAcceptDialogOpen] = useState(false);
+    const [isRejctDialogOpen, setIsRejctDialogOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
+    const user = typeof userIndex === "number" ? users[userIndex] : undefined
+
     return (
-        <Dialog open={user !== undefined} onOpenChange={() => setUser(undefined)}>
+        <Dialog open={userIndex !== undefined} onOpenChange={() => setUserIndex(undefined)}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Detail</DialogTitle>
@@ -97,7 +103,7 @@ export default function InvoicePreviewDialog({ user, setUser }: Props) {
                 </div>
                 {(!user?.invoice.verified_at && user?.step.last === 3) && (
                     <DialogFooter>
-                        <AlertDialog>
+                        <AlertDialog open={isRejctDialogOpen} onOpenChange={setIsRejctDialogOpen}>
                             <AlertDialogTrigger asChild>
                                 <Button variant={'destructive'}>
                                     Tolak
@@ -107,22 +113,21 @@ export default function InvoicePreviewDialog({ user, setUser }: Props) {
                                 <AlertDialogHeader>
                                     <AlertDialogTitle>Tolak Pendaftaran?</AlertDialogTitle>
                                 </AlertDialogHeader>
-                                <p className="mb-4">
+                                <AlertDialogDescription>
                                     Pengguna akan mengulang proses pendaftaran dari awal, tapi data akan tetap disimpan. Aksi ini tidak dapat dikembalikan. Apakah Anda yakin?
-                                </p>
-                                <form onSubmit={(evt) => evt.preventDefault()}>
-                                    <Label>Apa alasan Anda menolaknya?</Label>
-                                    <Textarea name="message" value={message} onChange={e => setMessage(e.target.value)} />
-                                </form>
+                                </AlertDialogDescription>
                                 <AlertDialogFooter>
                                     <AlertDialogCancel>Batal</AlertDialogCancel>
-                                    <AlertDialogAction disabled={isLoading} onClick={() => {
+                                    <Button disabled={isLoading} onClick={() => {
                                         setIsLoading(true)
                                         axios.post(reject().url, {
-                                            invoice_id: user.invoice.id,
-                                            message
+                                            invoice_id: user.invoice.id
                                         }).then(({ data: res }) => {
                                             toast.success(res.message)
+                                            const newUsers = [...users]
+                                            newUsers[userIndex!].step.last = 0
+                                            setUsers(newUsers)
+                                            setUserIndex(undefined)
                                         }).catch(err => {
                                             let message
                                             if (err instanceof AxiosError) {
@@ -133,16 +138,17 @@ export default function InvoicePreviewDialog({ user, setUser }: Props) {
                                             })
                                         }).finally(() => {
                                             setIsLoading(false)
+                                            setIsRejctDialogOpen(false)
                                         })
                                     }}>
                                         {isLoading ? (<>
                                             <Spinner /> Mengonfirmasi
                                         </>) : 'Konfirmasi'}
-                                    </AlertDialogAction>
+                                    </Button>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>
-                        <AlertDialog>
+                        <AlertDialog open={isAcceptDialogOpen} onOpenChange={setIsAcceptDialogOpen}>
                             <AlertDialogTrigger asChild>
                                 <Button>
                                     Terima
@@ -156,13 +162,17 @@ export default function InvoicePreviewDialog({ user, setUser }: Props) {
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                    <AlertDialogCancel>Batal</AlertDialogCancel>
-                                    <AlertDialogAction disabled={isLoading} onClick={() => {
+                                    <AlertDialogCancel disabled={isLoading}>Batal</AlertDialogCancel>
+                                    <Button disabled={isLoading} onClick={() => {
                                         setIsLoading(true)
                                         axios.post(accept().url, {
-                                            id: user.invoice.id
+                                            invoice_id: user.invoice.id
                                         }).then(({ data: res }) => {
                                             toast.success(res.message)
+                                            const newUsers = [...users]
+                                            newUsers[userIndex!].invoice.verified_at = res.data.verified_at
+                                            setUsers(newUsers)
+                                            setUserIndex(undefined)
                                         }).catch(err => {
                                             let message
                                             if (err instanceof AxiosError) {
@@ -173,12 +183,13 @@ export default function InvoicePreviewDialog({ user, setUser }: Props) {
                                             })
                                         }).finally(() => {
                                             setIsLoading(false)
+                                            setIsAcceptDialogOpen(false)
                                         })
                                     }}>
                                         {isLoading ? (<>
                                             <Spinner /> Mengonfirmasi
                                         </>) : 'Konfirmasi'}
-                                    </AlertDialogAction>
+                                    </Button>
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AcceptInvoiceRequest;
 use App\Http\Requests\RejectInvoiceRequest;
 use App\Models\Invoice;
 use App\Models\Participant;
@@ -16,8 +17,15 @@ class ValidatingController extends Controller
     public function index()
     {
         $search = request('search', '');
-        $users = User::with('invoice.participants', 'step', 'invoice.agency.level')
-            ->where('name', 'like', "%$search%")->where('role_id', '=', 2)
+        $users = User::query()
+            ->leftJoin('invoices', 'invoices.user_id', '=', 'users.id')
+            ->with('invoice.participants', 'step', 'invoice.agency.level')
+            ->where('users.name', 'like', "%$search%")
+            ->where('users.role_id', 2)
+            ->orderByRaw('invoices.verified_at IS NOT NULL') // NULL dulu
+            ->orderBy('invoices.verified_at')               // opsional
+            ->orderBy('users.id')                            // stabil
+            ->select('users.*')                              // WAJIB
             ->paginate(10)
             ->withQueryString();
 
@@ -26,15 +34,14 @@ class ValidatingController extends Controller
         return Inertia::render('validating', compact('users'));
     }
 
-    public function accept(Invoice $invoice)
+    public function accept(AcceptInvoiceRequest $request)
     {
-        sleep(2);
-        // authorize
-        $user = Auth::user();
-        abort_if($user->role_id !== 1, 403, 'Akses ditolak.');
+        $invoice = Invoice::findOrFail($request->invoice_id);
+
+        $verified_at = now();
 
         $invoice->update([
-            'verified_at' => now(),
+            'verified_at' => $verified_at,
         ]);
 
         $invoice->participants->each(function ($participant) {
@@ -44,7 +51,10 @@ class ValidatingController extends Controller
         });
 
         return response()->json([
-            'message' => 'Pendaftaran diterima!'
+            'message' => 'Pendaftaran berhasil diterima',
+            'data' => [
+                'verified_at' => $verified_at
+            ]
         ]);
     }
 
@@ -56,14 +66,8 @@ class ValidatingController extends Controller
 
         $user->step()->update(['last' => 0]);
 
-        $user->notifs()->create([
-            'title' => 'Pendaftaran ditolak!',
-            'message' => $request->message,
-            'action' => route('registration.index')
-        ]);
-
         return response()->json([
-            'message' => 'Pendaftaran ditolak!'
+            'message' => 'Pendaftaran berhasil ditolak'
         ]);
     }
 }

@@ -11,8 +11,8 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/react';
+import { SharedData, type NavItem } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
 import { CreditCard, LayoutGrid, Notebook, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 import registration from '@/routes/registration';
@@ -24,27 +24,42 @@ const mainNavItems: NavItem[] = [
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
-    },
-    {
-        title: 'Validasi Pendaftaran',
-        href: validating.index().url,
-        icon: CreditCard
-    },
-    {
-        title: 'Daftar Peserta',
-        href: participants.index().url,
-        icon: Users
-    },
-    {
-        title: 'Pendaftaran',
-        href: registration.index().url,
-        icon: Notebook
     }
 ];
 
 const footerNavItems: NavItem[] = [];
 
 export function AppSidebar() {
+    const { auth } = usePage<SharedData>().props;
+    let navItems;
+    if (auth.user.role_id === 1) {
+        navItems = mainNavItems.concat([
+            {
+                title: 'Validasi Pendaftaran',
+                href: validating.index().url,
+                icon: CreditCard
+            },
+            {
+                title: 'Daftar Peserta',
+                href: participants.index().url,
+                icon: Users
+            },
+        ])
+    } else {
+        navItems = mainNavItems.concat([
+            {
+                title: 'Daftar Peserta',
+                href: participants.index().url,
+                icon: Users
+            },
+            {
+                title: 'Pendaftaran',
+                href: registration.index().url,
+                icon: Notebook
+            }
+        ])
+    }
+
     return (
         <Sidebar collapsible="icon" variant="sidebar">
             <SidebarHeader>
@@ -60,7 +75,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={navItems} />
             </SidebarContent>
 
             <SidebarFooter>

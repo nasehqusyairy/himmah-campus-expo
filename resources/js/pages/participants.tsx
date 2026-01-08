@@ -4,13 +4,14 @@ import { DataTablePagination } from "@/components/data-table-pagination";
 import QRDialog from "@/components/qr-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import AppLayout from "@/layouts/app-layout"
 import participants from "@/routes/participants";
 import { BreadcrumbItem, Paginated, Participant } from "@/types";
 import { Form } from "@inertiajs/react";
 import { ColumnDef, getCoreRowModel, useReactTable, VisibilityState } from "@tanstack/react-table";
-import { QrCode, Search } from "lucide-react";
+import { Medal, MoreVertical, QrCode, Search } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "sonner";
 
@@ -21,29 +22,29 @@ function columnRefs(qr: string | undefined, setQr: Dispatch<SetStateAction<strin
             header: 'No.',
             cell: ({ row }) => row.index + 1
         },
-        {
-            id: 'qr',
-            header: 'QR',
-            cell: ({ row }) => {
-                return (
-                    <div className="cursor-pointer size-16 rounded-md border text-xs text-wrap text-muted-foreground flex items-center justify-center text-center" onClick={() => {
-                        if (!row.original.presence_token) {
-                            toast.error('QR masih dalam proses')
-                        } else {
-                            setQr('')
-                        }
-                    }}>
-                        {!row.original.presence_token ? (
-                            <span>
-                                Dalam proses
-                            </span>
-                        ) : (
-                            <QrCode />
-                        )}
-                    </div>
-                )
-            }
-        },
+        // {
+        //     id: 'qr',
+        //     header: 'QR',
+        //     cell: ({ row }) => {
+        //         return (
+        //             <div className="cursor-pointer size-16 rounded-md border text-xs text-wrap text-muted-foreground flex items-center justify-center text-center" onClick={() => {
+        //                 if (!row.original.presence_token) {
+        //                     toast.error('QR masih dalam proses')
+        //                 } else {
+        //                     setQr(row.original.presence_token)
+        //                 }
+        //             }}>
+        //                 {!row.original.presence_token ? (
+        //                     <span>
+        //                         Dalam Proses
+        //                     </span>
+        //                 ) : (
+        //                     <QrCode />
+        //                 )}
+        //             </div>
+        //         )
+        //     }
+        // },
         {
             id: 'name',
             header: 'Nama',
@@ -79,6 +80,30 @@ function columnRefs(qr: string | undefined, setQr: Dispatch<SetStateAction<strin
                 }
                 return (
                     <Badge variant={variant}>{label}</Badge>
+                )
+            }
+        }, {
+            id: 'action',
+            header: 'Aksi',
+            cell: ({ row }) => {
+                return (
+                    <>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button size={"icon"} variant={"ghost"}>
+                                    <MoreVertical />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                                <DropdownMenuItem onClick={() => setQr(row.original.presence_token)}>
+                                    <QrCode /> Kode QR
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => toast.error('Sertifikat belum tersedia')}>
+                                    <Medal /> Sertifikat
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </>
                 )
             }
         }

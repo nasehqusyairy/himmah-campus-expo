@@ -11,7 +11,7 @@ type Props = {
 export default function QRDialog({ qr, setQr }: Props) {
     const [url, setUrl] = useState('');
     useEffect(() => {
-        toDataURL([window.location.origin, 'presence', ''].join('/')).then(dataURL => {
+        toDataURL([window.location.origin, 'presence', qr].join('/')).then(dataURL => {
             setUrl(dataURL)
         })
     }, [qr]);

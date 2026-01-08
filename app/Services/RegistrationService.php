@@ -68,6 +68,7 @@ class RegistrationService
             }
 
             if ($agencyId === 1) {
+                $invoice->participants()->delete();
                 $invoice->participants()->create(['name' => $user->name]);
                 $user->step()->update(['last' => 3]);
             } else if ($user->step->last === 0) {

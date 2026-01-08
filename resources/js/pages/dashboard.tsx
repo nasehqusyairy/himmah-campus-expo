@@ -1,8 +1,11 @@
 import CallToActions from '@/components/call-to-actions';
+import { Task } from '@/components/task-item';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
-import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/react';
+import registration from '@/routes/registration';
+import validating from '@/routes/validating';
+import { SharedData, type BreadcrumbItem } from '@/types';
+import { Head, usePage } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -11,11 +14,34 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
+const memberTask: Task[] = [
+    {
+        title: "Selesaikan Pendaftaran",
+        description: "Pergi ke Halaman Pendaftaran dan lengkapi formulir",
+        url: registration.index().url
+    },
+    {
+        title: "Unduh Kode QR",
+        description: "Pergi ke Halaman Peserta, periksa kolom 'Aksi', klik tombol titik tiga vertikal di masing-masing peserta",
+        url: registration.index().url
+    },
+]
+
+const adminTasks: Task[] = [
+    {
+        title: "Periksa Pendaftaran",
+        description: "KERJA KERJA KERJA!!!",
+        url: validating.index().url
+    }
+]
+
 export default function Dashboard() {
+    const { auth: { user } } = usePage<SharedData>().props
+    const tasks = user.role_id === 2 ? memberTask : adminTasks
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-            <CallToActions />
+            <CallToActions tasks={tasks} />
         </AppLayout>
     );
 }

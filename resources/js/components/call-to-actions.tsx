@@ -7,47 +7,14 @@ import {
     ItemTitle,
 } from "@/components/ui/item"
 import { Button } from "./ui/button"
+import TaskItem, { Task } from "./task-item"
 
-const music = [
-    {
-        title: "Midnight City Lights",
-        artist: "Neon Dreams",
-        album: "Electric Nights",
-        duration: "3:45",
-    },
-    {
-        title: "Coffee Shop Conversations",
-        artist: "The Morning Brew",
-        album: "Urban Stories",
-        duration: "4:05",
-    },
-    {
-        title: "Digital Rain",
-        artist: "Cyber Symphony",
-        album: "Binary Beats",
-        duration: "3:30",
-    },
-]
-
-export default function CallToActions() {
+export default function CallToActions({ tasks }: { tasks: Task[] }) {
     return (
         <div className="flex flex-col gap-6">
             <ItemGroup className="gap-4">
-                {music.map((song) => (
-                    <Item key={song.title} variant="outline" role="listitem">
-                        <ItemContent>
-                            <ItemTitle className="line-clamp-1">
-                                {song.title} -{" "}
-                                <span className="text-muted-foreground">{song.album}</span>
-                            </ItemTitle>
-                            <ItemDescription>{song.artist}</ItemDescription>
-                        </ItemContent>
-                        <ItemContent className="flex-none text-center">
-                            <ItemDescription>
-                                <Button size={"sm"}>Pergi</Button>
-                            </ItemDescription>
-                        </ItemContent>
-                    </Item>
+                {tasks.map((task) => (
+                    <TaskItem task={task} />
                 ))}
             </ItemGroup>
         </div>

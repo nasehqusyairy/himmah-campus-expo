@@ -21,9 +21,21 @@ export function capitalizeWords(str: string): string {
     return str.replace(/\b\w/g, char => char.toUpperCase());
 }
 
-export const toRupiah = (value: number) =>
-    new Intl.NumberFormat("id-ID", {
+export function toRupiah(value: number) {
+    return new Intl.NumberFormat("id-ID", {
         style: "currency",
         currency: "IDR",
         minimumFractionDigits: 0,
     }).format(value)
+}
+
+export function parseQueryString(url: string): Record<string, string> {
+    const params = new URL(url).searchParams
+    const result: Record<string, string> = {}
+
+    params.forEach((value, key) => {
+        result[key] = value
+    })
+
+    return result
+}

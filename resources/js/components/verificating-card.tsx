@@ -17,7 +17,7 @@ export default function VerificatingCard() {
                         <div className="size-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
                             <Hourglass />
                         </div>
-                        <HeadingSmall className="text-center" title="Pendaftaran dalam proses verifikasi" description="Silakan tunggu maksimal 1x24 jam. Kami akan mengirimkan notifikasi melalui email setelah verifikasi selesai." />
+                        <HeadingSmall className="text-center" title="Pendaftaran dalam proses verifikasi" description="Silakan tunggu maksimal 1x24 jam. Kami akan mengirimkan notifikasi melalui WhatsApp setelah verifikasi selesai." />
 
                     </div>
                 </CardContent>
