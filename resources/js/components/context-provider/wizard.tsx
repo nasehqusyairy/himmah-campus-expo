@@ -63,7 +63,7 @@ export function WizardProvider({
             }
 
             toast.error('Terjadi Kesalahan', {
-                description: `${message} Jika masih terjadi kesalahan, hubungi admin`,
+                description: `${message}`,
             })
 
         })
