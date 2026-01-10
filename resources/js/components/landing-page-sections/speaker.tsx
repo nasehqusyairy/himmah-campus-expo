@@ -1,5 +1,5 @@
 import { GraduationCap, ShieldCheck, Star } from "lucide-react";
-import speaker from '@/images/speaker.png'
+import speaker from '@/images/speaker.jpg'
 
 export default () => {
     return (
