@@ -134,8 +134,8 @@ export function InvoiceCard({
             )}
 
             {invoice.payment_file && !uploading && (
-                <div className="flex items-center gap-1 text-sm underline">
-                    <img src={paymentFile().url + `?path=${invoice.payment_file}`} className="w-full rounded-md" alt="Bukti Pembayaran" />
+                <div className="flex justify-center">
+                    <img src={paymentFile().url + `?path=${invoice.payment_file}`} className="w-full md:w-6/12 lg:4/12 rounded-md" alt="Bukti Pembayaran" />
                 </div>
             )}
         </div>
