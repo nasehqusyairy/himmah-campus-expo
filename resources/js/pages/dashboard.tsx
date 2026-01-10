@@ -22,8 +22,8 @@ const memberTask: Task[] = [
         url: registration.index().url
     },
     {
-        title: "Unduh Kode QR",
-        description: "Pergi ke Halaman Peserta, periksa kolom 'Aksi'",
+        title: "Unduh Kode QR dan Sertifikat",
+        description: "Pergi ke Halaman Peserta",
         url: participants.index().url
     },
 ]

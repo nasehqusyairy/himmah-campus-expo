@@ -11,7 +11,7 @@ import participants from "@/routes/participants";
 import { BreadcrumbItem, Paginated, Participant } from "@/types";
 import { Form } from "@inertiajs/react";
 import { ColumnDef, getCoreRowModel, useReactTable, VisibilityState } from "@tanstack/react-table";
-import { Medal, MoreVertical, QrCode, Search } from "lucide-react";
+import { Download, Medal, MoreVertical, QrCode, Search } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "sonner";
 
@@ -84,18 +84,26 @@ function columnRefs(qr: string | undefined, setQr: Dispatch<SetStateAction<strin
             }
         }, {
             id: 'action',
-            header: 'Aksi',
+            header: 'Unduh',
             cell: ({ row }) => {
                 return (
                     <>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button size={"icon"} variant={"ghost"}>
-                                    <MoreVertical />
+                                <Button size={"icon"}>
+                                    <Download />
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                                <DropdownMenuItem onClick={() => setQr(row.original.presence_token)}>
+                                <DropdownMenuItem onClick={() => {
+                                    if (!row.original.presence_token) {
+                                        toast.error("QR belum tersedia", {
+                                            description: "Menunggu pemrosesan data oleh admin"
+                                        })
+                                    } else {
+                                        setQr(row.original.presence_token)
+                                    }
+                                }}>
                                     <QrCode /> Kode QR
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => toast.error('Sertifikat belum tersedia')}>
@@ -140,9 +148,6 @@ export default ({ participants }: Props) => {
             columnVisibility
         }
     })
-
-    console.log(participants);
-
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
