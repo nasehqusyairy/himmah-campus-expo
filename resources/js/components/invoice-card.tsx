@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
@@ -10,6 +10,7 @@ import { Invoice } from "@/types"
 import { confirmPay, pay } from "@/routes/registration"
 import { paymentFile } from "@/routes"
 import { useWizard } from "./context-provider/wizard"
+import { toast } from "sonner"
 
 type Props = {
     price: number
@@ -19,7 +20,7 @@ type Props = {
         name: string
     }
     quantity: number
-    fileUrl: string | null
+    invoice: Invoice
     setInvoice: Dispatch<SetStateAction<Invoice>>
 }
 
@@ -27,19 +28,17 @@ export function InvoiceCard({
     account,
     price,
     quantity,
-    fileUrl,
+    invoice,
     setInvoice,
 }: Props) {
     const [uploading, setUploading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
-
     const { setOnNext } = useWizard()
 
     useEffect(() => {
         setOnNext(() => async () => {
             await axios.post(confirmPay().url)
         })
-    }, [fileUrl]);
+    }, [invoice.payment_file]);
 
     const handleFileChange = async (
         e: React.ChangeEvent<HTMLInputElement>
@@ -48,7 +47,6 @@ export function InvoiceCard({
         if (!file) return
 
         setUploading(true)
-        setError(null)
 
         const formData = new FormData()
         formData.append("file", file)
@@ -64,13 +62,21 @@ export function InvoiceCard({
                 }
             )
 
+            toast.success('Bukti pembayaran berhasil diunggah')
+
             // asumsi backend mengembalikan file_url
             setInvoice(prev => ({
                 ...prev,
                 ...res.data.invoice,
             }))
         } catch (err: any) {
-            setError("Gagal mengunggah bukti pembayaran")
+            if (err instanceof AxiosError) {
+                toast.error("Gagal mengunggah bukti pembayaran", {
+                    description: err.response?.data.message
+                })
+            } else {
+                toast.error("Gagal mengunggah bukti pembayaran")
+            }
         } finally {
             setUploading(false)
             e.target.value = "" // reset input
@@ -127,16 +133,9 @@ export function InvoiceCard({
                 </div>
             )}
 
-            {error && (
-                <p className="text-sm text-destructive">{error}</p>
-            )}
-
-            {fileUrl && !uploading && (
+            {invoice.payment_file && !uploading && (
                 <div className="flex items-center gap-1 text-sm underline">
-                    <File size={16} />
-                    <a href={paymentFile().url} target="_blank" rel="noopener noreferrer">
-                        Pratinjau file
-                    </a>
+                    <img src={paymentFile().url + `?path=${invoice.payment_file}`} className="w-full rounded-md" alt="Bukti Pembayaran" />
                 </div>
             )}
         </div>

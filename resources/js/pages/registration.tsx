@@ -65,12 +65,12 @@ export default function Registration({ levels = [], invoice: invc, step, price, 
             component: <UserIdentityForm {...{ invoice, setInvoice, levels }} />
         },
         {
-            title: "Tambahkan Peserta",
+            title: "Tambahkan Peserta (Bisa lebih dari satu)",
             component: <ParticipantIdentity {...{ participants, setParticipants }} />
         },
         {
             title: "Selesaikan Pembayaran",
-            component: <InvoiceCard {...{ price, account, quantity: participants.length, fileUrl: invoice.payment_file, setInvoice }} />
+            component: <InvoiceCard {...{ price, account, quantity: participants.length, invoice, setInvoice }} />
         },
         {
             title: "Verifikasi",

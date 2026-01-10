@@ -12,6 +12,7 @@ import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { toast } from "sonner";
 import { Spinner } from "./ui/spinner";
+import { accMessage, rejectMessage } from "@/lib/wa-messages";
 
 type Props = {
     setUsers: Dispatch<SetStateAction<User[]>>
@@ -128,6 +129,7 @@ export default function InvoicePreviewDialog({ users, setUsers, userIndex, setUs
                                             newUsers[userIndex!].step!.last = 0
                                             setUsers(newUsers)
                                             setUserIndex(undefined)
+                                            window.open(`https://wa.me/62${user.invoice?.wa}?text=${encodeURIComponent(rejectMessage)}`, '_blank')
                                         }).catch(err => {
                                             let message
                                             if (err instanceof AxiosError) {
@@ -173,6 +175,7 @@ export default function InvoicePreviewDialog({ users, setUsers, userIndex, setUs
                                             newUsers[userIndex!].invoice!.verified_at = res.data.verified_at
                                             setUsers(newUsers)
                                             setUserIndex(undefined)
+                                            window.open(`https://wa.me/62${user.invoice?.wa}?text=${encodeURIComponent(accMessage)}`, '_blank')
                                         }).catch(err => {
                                             let message
                                             if (err instanceof AxiosError) {

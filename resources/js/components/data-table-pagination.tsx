@@ -16,16 +16,14 @@ export function DataTablePagination<T>({ pagination }: Props<T>) {
     const {
         current_page,
         last_page,
-        links,
+        first_page_url,
+        last_page_url,
+        next_page_url,
+        prev_page_url
     } = pagination
 
     const canPreviousPage = current_page > 1
     const canNextPage = current_page < last_page
-
-    const firstPageUrl = links.find(l => l.label === "&laquo; First")?.url
-    const prevPageUrl = links.find(l => l.label === "&lsaquo;")?.url
-    const nextPageUrl = links.find(l => l.label === "&rsaquo;")?.url
-    const lastPageUrl = links.find(l => l.label === "Last &raquo;")?.url
 
     return (
         <div className="flex items-center justify-end space-x-6 lg:space-x-8">
@@ -38,7 +36,10 @@ export function DataTablePagination<T>({ pagination }: Props<T>) {
                     variant="outline"
                     size="icon"
                     className="hidden size-8 lg:flex"
-                    onClick={() => firstPageUrl && router.get(firstPageUrl, {}, { preserveScroll: true })}
+                    onClick={() => {
+
+                        first_page_url && router.get(first_page_url, {}, { preserveScroll: true })
+                    }}
                     disabled={!canPreviousPage}
                 >
                     <ChevronsLeft />
@@ -47,7 +48,7 @@ export function DataTablePagination<T>({ pagination }: Props<T>) {
                 <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => prevPageUrl && router.get(prevPageUrl, {}, { preserveScroll: true })}
+                    onClick={() => prev_page_url && router.get(prev_page_url, {}, { preserveScroll: true })}
                     disabled={!canPreviousPage}
                 >
                     <ChevronLeft />
@@ -56,7 +57,9 @@ export function DataTablePagination<T>({ pagination }: Props<T>) {
                 <Button
                     variant="outline"
                     size="icon"
-                    onClick={() => nextPageUrl && router.get(nextPageUrl, {}, { preserveScroll: true })}
+                    onClick={() => {
+                        next_page_url && router.get(next_page_url, {}, { preserveScroll: true })
+                    }}
                     disabled={!canNextPage}
                 >
                     <ChevronRight />
@@ -66,7 +69,7 @@ export function DataTablePagination<T>({ pagination }: Props<T>) {
                     variant="outline"
                     size="icon"
                     className="hidden size-8 lg:flex"
-                    onClick={() => lastPageUrl && router.get(lastPageUrl, {}, { preserveScroll: true })}
+                    onClick={() => last_page_url && router.get(last_page_url, {}, { preserveScroll: true })}
                     disabled={!canNextPage}
                 >
                     <ChevronsRight />

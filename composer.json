@@ -53,7 +53,7 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "start /B php artisan serve",
+            "start /B php artisan serve --host=0.0.0.0",
             "start /B php artisan queue:listen --tries=1",
             "bun run dev"
         ],

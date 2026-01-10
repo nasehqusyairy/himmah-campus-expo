@@ -120,7 +120,7 @@ class RegistrationService
 
             // Hapus file lama jika ada
             if ($user->invoice->payment_file && Storage::disk('private')->exists($user->invoice->payment_file)) {
-                Storage::disk('private')->delete($user->payment_file);
+                Storage::disk('private')->delete($user->invoice->payment_file);
             }
 
             // Simpan file baru
@@ -131,6 +131,6 @@ class RegistrationService
                 'payment_file' => $path,
             ]);
         });
-        return $user->invoice;
+        return $user->load('invoice')->invoice;
     }
 }

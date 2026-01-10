@@ -141,6 +141,9 @@ export default ({ participants }: Props) => {
         }
     })
 
+    console.log(participants);
+
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <div className="lg:flex flex-row-reverse justify-between gap-2 mb-4">
