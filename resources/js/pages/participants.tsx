@@ -15,7 +15,11 @@ import { Download, Medal, MoreVertical, QrCode, Search } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "sonner";
 
-function columnRefs(qr: string | undefined, setQr: Dispatch<SetStateAction<string | undefined>>) {
+function columnRefs(
+    qr: string | undefined,
+    setQr: Dispatch<SetStateAction<string | undefined>>,
+    setQrOwner: Dispatch<SetStateAction<string>>
+) {
     return [
         {
             id: 'order',
@@ -101,6 +105,7 @@ function columnRefs(qr: string | undefined, setQr: Dispatch<SetStateAction<strin
                                             description: "Menunggu pemrosesan data oleh admin"
                                         })
                                     } else {
+                                        setQrOwner(row.original.name)
                                         setQr(row.original.presence_token)
                                     }
                                 }}>
@@ -131,13 +136,14 @@ type Props = {
 
 export default ({ participants }: Props) => {
     const [qr, setQr] = useState<string>();
+    const [qrOwner, setQrOwner] = useState('');
 
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
         agency: false,
         level: false
     })
 
-    const columns = columnRefs(qr, setQr)
+    const columns = columnRefs(qr, setQr, setQrOwner)
 
     const table = useReactTable({
         data: participants.data,
@@ -164,7 +170,7 @@ export default ({ participants }: Props) => {
             </div>
             <DataTable columns={columns} table={{ ...table }} />
             <DataTablePagination pagination={participants} />
-            <QRDialog qr={qr} setQr={setQr} />
+            <QRDialog qr={qr} setQr={setQr} qrOwner={qrOwner} />
         </AppLayout>
     )
 }

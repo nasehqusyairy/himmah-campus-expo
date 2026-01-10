@@ -6,9 +6,10 @@ import { toDataURL } from "qrcode";
 type Props = {
     setQr: Dispatch<SetStateAction<string | undefined>>
     qr: string | undefined
+    qrOwner: string
 }
 
-export default function QRDialog({ qr, setQr }: Props) {
+export default function QRDialog({ qr, setQr, qrOwner }: Props) {
     const [url, setUrl] = useState('');
     useEffect(() => {
         toDataURL([window.location.origin, 'presence', qr].join('/')).then(dataURL => {
@@ -24,7 +25,7 @@ export default function QRDialog({ qr, setQr }: Props) {
                 </div>
                 <DialogFooter>
                     <Button asChild>
-                        <a href={url} target="_blank" download={qr}>Unduh</a>
+                        <a href={url} target="_blank" download={qrOwner}>Unduh</a>
                     </Button>
                 </DialogFooter>
             </DialogContent>
