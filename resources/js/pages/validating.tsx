@@ -40,9 +40,12 @@ function columnRefs(setPreview: Dispatch<SetStateAction<number | undefined>>) {
             id: 'wa',
             header: 'WhatsApp',
             cell: ({ row, }) => {
+                if (!row.original.invoice?.wa) {
+                    return '-'
+                }
                 return (
                     <a className="text-primary underline" href={"https://wa.me/+62" + row.original.invoice?.wa} target="_blank">
-                        {row.original.invoice?.wa || '-'}
+                        {row.original.invoice?.wa}
                     </a>
                 )
             }
