@@ -1,3 +1,4 @@
+import GoogleAuthButton from '@/components/google-auth-button';
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
@@ -96,6 +97,7 @@ export default function Login({
                                 {processing && <Spinner />}
                                 Log in
                             </Button>
+                            <GoogleAuthButton />
                         </div>
 
                         {canRegister && (

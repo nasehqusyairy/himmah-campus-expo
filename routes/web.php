@@ -10,12 +10,19 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
+use App\Http\Controllers\Auth\GoogleController;
 
 Route::get('/', function () {
     return Inertia::render('welcome', [
         'canRegister' => Features::enabled(Features::registration()),
     ]);
 })->name('home');
+
+Route::get('/auth/google', [GoogleController::class, 'redirect'])
+    ->name('auth.google.redirect');
+
+Route::get('/auth/google/callback', [GoogleController::class, 'callback'])
+    ->name('auth.google.callback');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {

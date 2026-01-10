@@ -1,12 +1,4 @@
-import {
-    Item,
-    ItemContent,
-    ItemDescription,
-    ItemGroup,
-    ItemMedia,
-    ItemTitle,
-} from "@/components/ui/item"
-import { Button } from "./ui/button"
+import { ItemGroup } from "@/components/ui/item"
 import TaskItem, { Task } from "./task-item"
 
 export default function CallToActions({ tasks }: { tasks: Task[] }) {

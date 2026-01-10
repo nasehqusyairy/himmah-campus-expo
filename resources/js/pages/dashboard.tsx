@@ -2,6 +2,7 @@ import CallToActions from '@/components/call-to-actions';
 import { Task } from '@/components/task-item';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
+import participants from '@/routes/participants';
 import registration from '@/routes/registration';
 import validating from '@/routes/validating';
 import { SharedData, type BreadcrumbItem } from '@/types';
@@ -22,8 +23,8 @@ const memberTask: Task[] = [
     },
     {
         title: "Unduh Kode QR",
-        description: "Pergi ke Halaman Peserta, periksa kolom 'Aksi', klik tombol titik tiga vertikal di masing-masing peserta",
-        url: registration.index().url
+        description: "Pergi ke Halaman Peserta, periksa kolom 'Aksi'",
+        url: participants.index().url
     },
 ]
 
