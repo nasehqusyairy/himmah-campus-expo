@@ -59,7 +59,7 @@ class DatabaseSeeder extends Seeder
         }
 
         $sma  = [
-            ['id' => '1', 'name' => 'PP. Bayt Al-Hikmah Pasuruan', 'level_id' => 4],
+            ['name' => 'PP. Bayt Al-Hikmah Pasuruan', 'level_id' => 4],
             ['name' => 'SMAN 1 PASURUAN', 'level_id' => 2],
             ['name' => 'SMAN 2 PASURUAN', 'level_id' => 2],
             ['name' => 'SMAN 3 PASURUAN', 'level_id' => 2],
