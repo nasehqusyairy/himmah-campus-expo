@@ -86,16 +86,16 @@ class DatabaseSeeder extends Seeder
             ['name' => 'MA TARBIYATUS SALAFIYAH', 'level_id' => 2],
         ];
 
+        foreach ($sma as $s) {
+            Agency::firstOrCreate($s);
+        }
+
         // smp
         for ($i = 1; $i <= 9; $i++) {
             Agency::firstOrCreate([
                 'name' => "SMPN $i Kota Pasuruan",
                 'level_id' => 1
             ]);
-        }
-
-        foreach ($sma as $s) {
-            Agency::firstOrCreate($s);
         }
     }
 }
