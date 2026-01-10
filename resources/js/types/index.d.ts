@@ -40,8 +40,8 @@ export interface User {
     created_at: string;
     updated_at: string;
     role_id: number
-    invoice: Invoice
-    step: Step
+    invoice?: Invoice
+    step?: Step
 }
 
 export type Step = {

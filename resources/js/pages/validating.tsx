@@ -41,7 +41,7 @@ function columnRefs(setPreview: Dispatch<SetStateAction<number | undefined>>) {
             header: 'WhatsApp',
             cell: ({ row, }) => {
                 return (
-                    <a className="text-primary underline" href={"https://wa.me/+62" + row.original.invoice.wa} target="_blank">
+                    <a className="text-primary underline" href={"https://wa.me/+62" + row.original.invoice?.wa} target="_blank">
                         {row.original.invoice?.wa}
                     </a>
                 )
@@ -51,7 +51,8 @@ function columnRefs(setPreview: Dispatch<SetStateAction<number | undefined>>) {
             id: 'status',
             header: 'Status',
             cell: ({ row }) => {
-                const { invoice: { verified_at }, step: { last } } = row.original
+                const verified_at = row.original.invoice?.verified_at
+                const last = row.original.step?.last ?? 0
                 let variant: "default" | "destructive" | "secondary" | "outline" | null | undefined, label;
                 if (verified_at) {
                     variant = 'default'
