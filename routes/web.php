@@ -41,6 +41,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [ValidatingController::class, 'index'])->name('validating.index');
         Route::post('/accept', [ValidatingController::class, 'accept'])->name('validating.accept');
         Route::post('/reject', [ValidatingController::class, 'reject'])->name('validating.reject');
+        Route::delete('/delete-user', [ValidatingController::class, 'deleteUser'])->name('validating.delete-user');
     });
     Route::middleware(MemberOnly::class)->prefix('registration')->group(function () {
         Route::get('/', [RegistrationController::class, 'index'])->name('registration.index');

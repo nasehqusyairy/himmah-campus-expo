@@ -3,22 +3,27 @@ import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import InvoicePreviewDialog from "@/components/invoice-preview-dialog";
 import QRDialog from "@/components/qr-dialog";
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import AppLayout from "@/layouts/app-layout"
 import participants from "@/routes/participants";
-import validating from "@/routes/validating";
+import validating, { deleteUser } from "@/routes/validating";
 import { BreadcrumbItem, Paginated, Participant, User } from "@/types";
 import { Form } from "@inertiajs/react";
 import { ColumnDef, getCoreRowModel, useReactTable, VisibilityState } from "@tanstack/react-table";
-import axios from "axios";
-import { MoreVertical, QrCode, Search, SquareArrowOutUpRight } from "lucide-react";
+import axios, { AxiosError } from "axios";
+import { MoreVertical, QrCode, Search, SquareArrowOutUpRight, UserX } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { toast } from "sonner";
 
-function columnRefs(setPreview: Dispatch<SetStateAction<number | undefined>>) {
+function columnRefs(
+    setPreview: Dispatch<SetStateAction<number | undefined>>,
+    setUserIdToDelete: Dispatch<SetStateAction<number | undefined>>
+): ColumnDef<User>[] {
     return [
         {
             id: 'order',
@@ -79,23 +84,14 @@ function columnRefs(setPreview: Dispatch<SetStateAction<number | undefined>>) {
             header: 'Aksi',
             cell: ({ row }) => {
                 return (
-                    <>
+                    <div className="flex gap-1">
                         <Button size={"icon"} onClick={() => setPreview(row.index)}>
                             <SquareArrowOutUpRight />
                         </Button>
-                        {/* <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button size={"icon"} variant={"ghost"}>
-                                    <MoreVertical />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                                <DropdownMenuItem>
-                                    <SquareArrowOutUpRight /> Detail
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu> */}
-                    </>
+                        <Button size={"icon"} variant={"destructive"} onClick={() => setUserIdToDelete(row.original.id)}>
+                            <UserX />
+                        </Button>
+                    </div>
                 )
             }
         }
@@ -116,16 +112,15 @@ type Props = {
 export default ({ users: paginatedUsers }: Props) => {
     const [users, setUsers] = useState(paginatedUsers.data);
     const [preview, setPreview] = useState<number>();
-
-    // console.log(users);
-
+    const [isdeletingUser, setIsdeletingUser] = useState(false);
+    const [userIdToDelete, setUserIdToDelete] = useState<number>();
 
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
         agency: false,
         level: false
     })
 
-    const columns = columnRefs(setPreview)
+    const columns = columnRefs(setPreview, setUserIdToDelete)
 
     const table = useReactTable({
         data: users,
@@ -153,6 +148,45 @@ export default ({ users: paginatedUsers }: Props) => {
             <DataTable columns={columns} table={{ ...table }} />
             <DataTablePagination pagination={paginatedUsers} />
             <InvoicePreviewDialog users={users} setUsers={setUsers} setUserIndex={setPreview} userIndex={preview} />
+            <AlertDialog open={userIdToDelete !== undefined} onOpenChange={() => setUserIdToDelete(undefined)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Hapus User?</AlertDialogTitle>
+                    </AlertDialogHeader>
+                    <AlertDialogDescription>
+                        Apakah Anda yakin?
+                    </AlertDialogDescription>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                        <Button disabled={isdeletingUser} onClick={() => {
+                            setIsdeletingUser(true)
+                            axios.delete(deleteUser().url, {
+                                data: {
+                                    user_id: userIdToDelete
+                                }
+                            }).then(({ data: res }) => {
+                                toast.success(res.message)
+                                setUsers(users.filter(user => user.id !== userIdToDelete))
+                            }).catch(err => {
+                                let message
+                                if (err instanceof AxiosError) {
+                                    message = err.response?.data.message
+                                }
+                                toast.error('Gagal menghapus user', {
+                                    description: `${message}`
+                                })
+                            }).finally(() => {
+                                setIsdeletingUser(false)
+                                setUserIdToDelete(undefined)
+                            })
+                        }}>
+                            {isdeletingUser ? (<>
+                                <Spinner /> Mengonfirmasi
+                            </>) : 'Konfirmasi'}
+                        </Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </AppLayout>
     )
 }

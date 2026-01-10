@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
+import PasswordInput from '@/components/password-input';
 
 export default function Register() {
     return (
@@ -60,7 +61,7 @@ export default function Register() {
 
                             <div className="grid gap-2">
                                 <Label htmlFor="password">Password</Label>
-                                <Input
+                                <PasswordInput
                                     id="password"
                                     type="password"
                                     required
@@ -76,7 +77,7 @@ export default function Register() {
                                 <Label htmlFor="password_confirmation">
                                     Konfirmasi password
                                 </Label>
-                                <Input
+                                <PasswordInput
                                     id="password_confirmation"
                                     type="password"
                                     required

@@ -70,4 +70,14 @@ class ValidatingController extends Controller
             'message' => 'Pendaftaran berhasil ditolak'
         ]);
     }
+
+    public function deleteUser(Request $request)
+    {
+        $user = User::findOrFail($request->user_id);
+        $user->delete();
+
+        return response()->json([
+            'message' => 'User dan data terkait berhasil dihapus'
+        ]);
+    }
 }
