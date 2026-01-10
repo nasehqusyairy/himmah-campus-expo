@@ -91,7 +91,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // smp
-        for ($i = 1; $i <= 9; $i++) {
+        for ($i = 1; $i <= 11; $i++) {
             Agency::firstOrCreate([
                 'name' => "SMPN $i Kota Pasuruan",
                 'level_id' => 1
