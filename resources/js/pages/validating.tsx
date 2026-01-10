@@ -42,7 +42,7 @@ function columnRefs(setPreview: Dispatch<SetStateAction<number | undefined>>) {
             cell: ({ row, }) => {
                 return (
                     <a className="text-primary underline" href={"https://wa.me/+62" + row.original.invoice?.wa} target="_blank">
-                        {row.original.invoice?.wa}
+                        {row.original.invoice?.wa || '-'}
                     </a>
                 )
             }
