@@ -100,8 +100,8 @@ export default () => {
             </div>
             <div className="flex animate-[marquee_30s_linear_infinite] whitespace-nowrap">
                 {univs.concat(univs).map((univ, idx) => (
-                    <a href={univ.href} target="_blank">
-                        <img key={idx} src={"/assets/images/" + univ.img} loading="lazy" alt={univ.name} className="h-12 w-12 mx-8 object-contain filter grayscale hover:grayscale-0 opacity-50 hover:opacity-100 transition-opacity" />
+                    <a href={univ.href} target="_blank" key={idx}>
+                        <img src={"/assets/images/" + univ.img} loading="lazy" alt={univ.name} className="h-12 w-12 mx-8 object-contain filter grayscale hover:grayscale-0 opacity-50 hover:opacity-100 transition-opacity" />
                     </a>
                 ))}
             </div>
