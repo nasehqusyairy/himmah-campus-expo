@@ -2,14 +2,27 @@ import logo from '@/images/logo.png'
 import { Button } from '../ui/button';
 import { Link } from '@inertiajs/react';
 import { login } from '@/routes';
+import { useEffect, useState } from 'react';
 
-export default () => {
+export default function Header() {
+    const [isTop, setIsTop] = useState(true);
+
+    useEffect(() => {
+        // guard for SSR and set initial state
+        if (typeof window !== 'undefined') {
+            setIsTop(window.scrollY === 0);
+            const onScroll = () => setIsTop(window.scrollY === 0);
+            window.addEventListener('scroll', onScroll, { passive: true });
+            return () => window.removeEventListener('scroll', onScroll);
+        }
+    }, []);
+
     return (
-        <header className="fixed top-0 w-full z-50 bg-black/60 backdrop-blur-md border-b border-primary/50">
+        <header className={`fixed top-0 w-full z-50 transition-colors duration-300 ${isTop ? 'bg-transparent' : 'bg-black/60 backdrop-blur-md'}`}>
             <div className="container mx-auto px-4 py-4 flex justify-between items-center">
                 <div className="flex items-center gap-2">
                     <img src={logo} className="size-12" alt="logo" />
-                    <span className="font-bold text-xl tracking-tight hidden sm:inline-block"><span className="text-primary">HIMMAH</span> <span className="italic">CAMPUS EXPO</span></span>
+                    <span className="font-bold text-xl tracking-tight hidden sm:inline-block uppercase">Seminar Pelajar <span className="text-primary">Gen-Z</span> </span>
                 </div>
                 <nav className="hidden md:flex gap-8 text-sm font-semibold uppercase tracking-widest text-gray-300">
                     <a href="#" className="hover:transition-colors">Beranda</a>

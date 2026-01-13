@@ -9,12 +9,11 @@ export default () => {
             <div className="absolute bottom-20 left-0 w-80 h-80 bg-teal-900/20 rounded-full blur-[80px] -z-10"></div>
 
             <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center">
-                <div className="z-10 text-center lg:text-left">
-                    <h1 className="text-4xl md:text-6xl lg:text-5xl font-extrabold leading-tight mb-4">
+                <div className="z-10">
+                    <h1 className="text-4xl md:text-6xl lg:text-5xl font-extrabold leading-tight mb-4 mt-4 lg:mt-0">
                         <span className="">SEMINAR PELAJAR </span>
-                        <span className="text-primary">GEN-Z</span> <br />
-                        <span>&</span> <span className="italic">CAMPUS EXPO</span><br />
-                        <span className="bg-primary text-black px-4">2026</span>
+                        <span className="">GEN-Z</span> <span>DAN</span><br />
+                        <span className="bg-primary text-black px-4">CAMPUS EXPO</span>
                     </h1>
                     <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light">
                         Level up Your Future with Shakira and Himmah Campus Expo
@@ -54,7 +53,7 @@ export default () => {
                             <p className="text-xs font-bold uppercase tracking-widest">Januari</p>
                         </div>
                         <div className="absolute -bottom-6 -left-6 bg-white text-black p-4 rounded-2xl shadow-xl transform -rotate-3">
-                            <p className="text-lg font-black leading-tight text-center">LIMITTED<br />SLOTS</p>
+                            <p className="text-lg font-black leading-tight text-center">LIMITED<br />SLOTS</p>
                         </div>
                     </div>
                 </div>

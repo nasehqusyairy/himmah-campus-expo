@@ -1,5 +1,6 @@
 import { GraduationCap, ShieldCheck, Star } from "lucide-react";
 import speaker from '@/images/speaker.jpg'
+import { Badge } from "../ui/badge";
 
 export default () => {
     return (
@@ -17,9 +18,9 @@ export default () => {
                             <h3 className="text-2xl font-black italic text-center uppercase skew-x-12">Shakira Amirah</h3>
                         </div>
                     </div>
-                    <div className="w-full md:w-1/2 text-center md:text-left">
-                        <div className="text-primary font-bold uppercase tracking-[0.2em] mb-4">Pembicara Tamu</div>
-                        <h2 className="text-4xl font-bold mb-6">Pemenang <span className="text-primary italic">Clash of Champions</span> Ruangguru <span className="inile-block bg-primary px-2">2024</span></h2>
+                    <div className="w-full md:w-1/2">
+                        <Badge className="mb-4 font-bold uppercase">Pembicara</Badge>
+                        <h2 className="text-4xl font-bold mb-6">Pemenang <span className="text-primary">Clash of Champions</span> Ruangguru <span className="inile-block bg-primary px-2">2024</span></h2>
                         {/* <p className="text-gray-400 text-lg mb-8 leading-relaxed italic">
                             "Experience the journey of excellence. Learn from the best how to strategically plan your academic future and crush your goals."
                         </p> */}
