@@ -19,17 +19,22 @@ class ValidatingController extends Controller
         $search = request('search', '');
         $users = User::query()
             ->leftJoin('invoices', 'invoices.user_id', '=', 'users.id')
+            ->leftJoin('steps', 'steps.user_id', '=', 'users.id')
             ->with('invoice.participants', 'step', 'invoice.agency.level')
             ->where('users.name', 'like', "%$search%")
             ->where('users.role_id', 2)
-            ->orderByRaw('invoices.verified_at IS NOT NULL') // NULL dulu
-            ->orderBy('invoices.verified_at')               // opsional
-            ->orderBy('users.id')                            // stabil
-            ->select('users.*')                              // WAJIB
+            ->orderByRaw("
+                CASE
+                    WHEN steps.last = 3 AND invoices.verified_at IS NULL THEN 0
+                    WHEN steps.last < 3 AND invoices.verified_at IS NULL THEN 1
+                    ELSE 2
+                END
+            ")
+            ->orderBy('steps.last', 'desc')   // opsional: last lebih besar dulu
+            ->orderBy('users.id')              // stabil untuk pagination
+            ->select('users.*')
             ->paginate(10)
             ->withQueryString();
-
-        // dd($users);
 
         return Inertia::render('validating', compact('users'));
     }

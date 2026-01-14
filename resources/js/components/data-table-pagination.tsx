@@ -19,7 +19,8 @@ export function DataTablePagination<T>({ pagination }: Props<T>) {
         first_page_url,
         last_page_url,
         next_page_url,
-        prev_page_url
+        prev_page_url,
+        total
     } = pagination
 
     const canPreviousPage = current_page > 1
@@ -28,7 +29,7 @@ export function DataTablePagination<T>({ pagination }: Props<T>) {
     return (
         <div className="flex items-center justify-end space-x-6 lg:space-x-8">
             <div className="flex items-center justify-center text-sm font-medium">
-                Halaman {current_page} dari {last_page}
+                Menampilkan halaman {current_page} dari {last_page} (total {total} data)
             </div>
 
             <div className="flex items-center space-x-2">
