@@ -24,7 +24,12 @@ function columnRefs(
         {
             id: 'order',
             header: 'No.',
-            cell: ({ row }) => row.index + 1
+            cell: ({ row, table }) => {
+                const pageIndex = table.getState().pagination.pageIndex
+                const pageSize = table.getState().pagination.pageSize
+
+                return row.index + 1 + (pageIndex * pageSize)
+            }
         },
         // {
         //     id: 'qr',
@@ -151,7 +156,11 @@ export default ({ participants }: Props) => {
         getCoreRowModel: getCoreRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
         state: {
-            columnVisibility
+            columnVisibility,
+            pagination: {
+                pageIndex: participants.current_page - 1,
+                pageSize: participants.per_page
+            }
         }
     })
 
