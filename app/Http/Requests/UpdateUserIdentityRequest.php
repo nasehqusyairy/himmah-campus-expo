@@ -25,6 +25,7 @@ class UpdateUserIdentityRequest extends FormRequest
             'phone' => [
                 'required',
                 'string',
+                'min:10',
                 'max:20',
                 Rule::unique('invoices', 'wa')
                     ->where(fn($query) => $query->where('user_id', '!=', $userId)),

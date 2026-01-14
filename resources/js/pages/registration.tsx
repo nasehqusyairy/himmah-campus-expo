@@ -7,8 +7,8 @@ import VerificatingCard from "@/components/verificating-card";
 import VerifiedCard from "@/components/verified-card";
 import AppLayout from "@/layouts/app-layout";
 import registration from "@/routes/registration";
-import { Agency, BreadcrumbItem, Invoice, Option, Participant } from "@/types";
-import { Head } from "@inertiajs/react";
+import { Agency, BreadcrumbItem, Invoice, Option, Participant, SharedData } from "@/types";
+import { Head, usePage } from "@inertiajs/react";
 import axios from "axios";
 import { Info, TriangleAlert } from "lucide-react";
 import { ReactNode, useState } from "react";
@@ -59,14 +59,16 @@ export default function Registration({ levels = [], invoice: invc, step, price, 
     const [invoice, setInvoice] = useState(invc);
     const [participants, setParticipants] = useState<string[]>(invc.participants.map(el => el.name));
 
+    const { auth } = usePage<SharedData>().props
+
     const steps = [
         {
             title: "Lengkapi Identitas",
             component: <UserIdentityForm {...{ invoice, setInvoice, levels }} />
         },
         {
-            title: "Tambahkan Peserta (Bisa lebih dari satu)",
-            component: <ParticipantIdentity {...{ participants, setParticipants }} />
+            title: "Tambahkan Peserta " + (auth.user.invoice?.agency_id !== 1 ? "(Bisa lebih dari satu)" : ""),
+            component: <ParticipantIdentity {...{ participants, setParticipants, invoice }} />
         },
         {
             title: "Selesaikan Pembayaran",

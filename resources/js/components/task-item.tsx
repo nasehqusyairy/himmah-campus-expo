@@ -1,5 +1,5 @@
 import { Link } from "@inertiajs/react";
-import { Item, ItemContent, ItemDescription, ItemTitle } from "./ui/item";
+import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "./ui/item";
 import { Button } from "./ui/button";
 
 export type Task = {
@@ -17,15 +17,13 @@ export default function TaskItem({ task: { description, title, url } }: { task: 
                 </ItemTitle>
                 <ItemDescription>{description}</ItemDescription>
             </ItemContent>
-            <ItemContent className="flex-none text-center">
-                <ItemDescription>
-                    <Button size={"sm"} asChild>
-                        <Link href={url} className="no-underline!">
-                            Pergi
-                        </Link>
-                    </Button>
-                </ItemDescription>
-            </ItemContent>
+            <ItemActions className="flex-none text-center">
+                <Button size={"sm"} asChild>
+                    <Link href={url} className="no-underline!">
+                        Pergi
+                    </Link>
+                </Button>
+            </ItemActions>
         </Item>
     )
 }

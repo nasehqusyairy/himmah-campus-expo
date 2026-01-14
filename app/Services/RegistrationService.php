@@ -67,13 +67,7 @@ class RegistrationService
                 $invoice->agency_id = $agencyId;
             }
 
-            if ($agencyId === 1) {
-                $invoice->participants()->delete();
-                $invoice->participants()->create(['name' => $user->name]);
-                $user->step()->update(['last' => 3]);
-            } else if ($user->step->last === 0) {
-                $user->step()->update(['last' => 1]);
-            }
+            $user->step()->update(['last' => 1]);
 
             $invoice->wa =  $data['phone'];
             $invoice->save();
@@ -99,14 +93,20 @@ class RegistrationService
             $invoice->participants()->delete();
 
             // Tambahkan participant baru
-            $invoice->participants()->createMany(
-                collect($names)->map(fn($name) => [
-                    'name' => $name,
-                ])->toArray()
-            );
-
-            if ($user->step->last === 1) {
-                $user->step()->update(['last' => 2]);
+            if ($invoice->agency_id === 1) {
+                $invoice->participants()->create([
+                    'name' => $names[0]
+                ]);
+                $user->step()->update(['last' => 3]);
+            } else {
+                $invoice->participants()->createMany(
+                    collect($names)->map(fn($name) => [
+                        'name' => $name,
+                    ])->toArray()
+                );
+                if ($user->step->last === 1) {
+                    $user->step()->update(['last' => 2]);
+                }
             }
         });
     }

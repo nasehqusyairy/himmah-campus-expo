@@ -26,7 +26,7 @@ export default function UserIdentityForm({ invoice, setInvoice, levels }: Props)
     const [agencies, setAgencies] = useState<Option[]>([]);
     const [isFetching, setIsFetching] = useState(false);
 
-    const { setOnNext, setCurrentStep } = useWizard()
+    const { setOnNext } = useWizard()
 
     useEffect(() => {
         const onnextfun = async () => {
@@ -42,9 +42,6 @@ export default function UserIdentityForm({ invoice, setInvoice, levels }: Props)
 
             const { data } = await axios.post(userIdentity.url(), body)
             setInvoice({ ...invoice, ...data.data.invoice })
-            if (invoice.agency_id === 1) {
-                setCurrentStep(3)
-            }
         }
         setOnNext((() => onnextfun) as any)
     }, [invoice.agency?.name, invoice.agency_id, invoice.agency?.level_id, invoice.wa]);

@@ -4,6 +4,7 @@ import { InputHTMLAttributes, useState } from "react";
 
 export default function PasswordInput(props: InputHTMLAttributes<HTMLInputElement>) {
     const [showPassword, setShowPassword] = useState(false);
+
     return (
         <InputGroup>
             <InputGroupInput

@@ -4,23 +4,25 @@ import { Input } from "./ui/input"
 import { Label } from "./ui/label"
 import { useEffect, useState } from "react"
 import { capitalizeWords } from "@/lib/utils"
-import { Item, ItemActions, ItemContent, ItemTitle } from "./ui/item"
 import { useWizard } from "./context-provider/wizard"
 import axios from "axios"
 import { participantNames } from "@/routes/registration"
 import { usePage } from "@inertiajs/react"
-import { SharedData } from "@/types"
+import { Invoice, SharedData } from "@/types"
 
 type Props = {
+    invoice?: Invoice
     participants: string[]
     setParticipants: (list: string[]) => void
 }
-export default function ParticipantIdentity({ participants, setParticipants }: Props) {
-    const [name, setName] = useState("");
-
+export default function ParticipantIdentity({ participants, setParticipants, invoice }: Props) {
     const { auth } = usePage<SharedData>().props;
 
-    const { setOnNext } = useWizard()
+    const isAlumnus = invoice?.agency_id === 1
+
+    const [name, setName] = useState(isAlumnus ? auth.user.name : "");
+
+    const { setOnNext, setCurrentStep } = useWizard()
 
     const removeParticipant = (name: string) => {
         const filtered = participants.filter(el => el.toLowerCase() !== name.toLowerCase());
@@ -29,20 +31,34 @@ export default function ParticipantIdentity({ participants, setParticipants }: P
 
     useEffect(() => {
         if (!participants.length) {
-            setParticipants([...participants, auth.user.name])
+            setParticipants([auth.user.name])
         }
     }, []);
 
     useEffect(() => {
-        console.log(participants);
-
-        const onnextfun = () => {
-            return axios.post(participantNames().url, {
-                names: participants
-            })
+        const onnextfun = async () => {
+            await axios.post(participantNames().url, { names: participants })
+            setCurrentStep(isAlumnus ? 3 : 2)
         }
         setOnNext((() => onnextfun) as any)
     }, [participants]);
+
+    useEffect(() => {
+        if (isAlumnus) {
+            setParticipants([name])
+        }
+    }, [name]);
+
+    if (isAlumnus) {
+        return (
+            <>
+                <form className="mb-4" onSubmit={(evt) => { evt.preventDefault() }}>
+                    <Label htmlFor="name">Nama Lengkap</Label>
+                    <Input id="name" name="name" value={name} onChange={(evt) => setName(evt.target.value.toUpperCase())} />
+                </form>
+            </>
+        )
+    }
 
     return (
         <>
@@ -55,7 +71,7 @@ export default function ParticipantIdentity({ participants, setParticipants }: P
             }}>
                 <Label htmlFor="name">Nama Lengkap</Label>
                 <div className="flex gap-2">
-                    <Input id="name" name="name" value={name} onChange={(evt) => setName(evt.target.value)} />
+                    <Input id="name" name="name" value={name} onChange={(evt) => setName(evt.target.value.toUpperCase())} />
                     <div>
                         <Button type="submit" size={"icon"}><Plus /></Button>
                     </div>

@@ -63,7 +63,6 @@ export default function Register() {
                                 <Label htmlFor="password">Password</Label>
                                 <PasswordInput
                                     id="password"
-                                    type="password"
                                     required
                                     tabIndex={3}
                                     autoComplete="new-password"
@@ -79,7 +78,6 @@ export default function Register() {
                                 </Label>
                                 <PasswordInput
                                     id="password_confirmation"
-                                    type="password"
                                     required
                                     tabIndex={4}
                                     autoComplete="new-password"

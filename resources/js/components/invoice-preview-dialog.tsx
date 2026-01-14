@@ -129,7 +129,7 @@ export default function InvoicePreviewDialog({ users, setUsers, userIndex, setUs
                                             newUsers[userIndex!].step!.last = 0
                                             setUsers(newUsers)
                                             setUserIndex(undefined)
-                                            window.open(`https://wa.me/62${user.invoice?.wa}?text=${encodeURIComponent(rejectMessage)}`, '_blank')
+                                            window.open(`https://api.whatsapp.com/send/?phone=62${user.invoice?.wa}&text=${encodeURIComponent(rejectMessage)}`, '_blank')
                                         }).catch(err => {
                                             let message
                                             if (err instanceof AxiosError) {
@@ -175,7 +175,7 @@ export default function InvoicePreviewDialog({ users, setUsers, userIndex, setUs
                                             newUsers[userIndex!].invoice!.verified_at = res.data.verified_at
                                             setUsers(newUsers)
                                             setUserIndex(undefined)
-                                            window.open(`https://wa.me/62${user.invoice?.wa}?text=${encodeURIComponent(accMessage)}`, '_blank')
+                                            window.open(`https://api.whatsapp.com/send/?phone=62${user.invoice?.wa}&text=${encodeURIComponent(accMessage)}`, '_blank')
                                         }).catch(err => {
                                             let message
                                             if (err instanceof AxiosError) {

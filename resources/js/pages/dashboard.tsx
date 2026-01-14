@@ -1,5 +1,5 @@
-import CallToActions from '@/components/call-to-actions';
-import { Task } from '@/components/task-item';
+import TaskItem, { Task } from '@/components/task-item';
+import { ItemGroup } from '@/components/ui/item';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import participants from '@/routes/participants';
@@ -42,7 +42,11 @@ export default function Dashboard() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-            <CallToActions tasks={tasks} />
+            <ItemGroup className="gap-4">
+                {tasks.map((task, i) => (
+                    <TaskItem key={i} task={task} />
+                ))}
+            </ItemGroup>
         </AppLayout>
     );
 }
