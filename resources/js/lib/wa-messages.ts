@@ -16,7 +16,7 @@ Kami menantikan kehadiran Anda untuk melangkah bersama menuju masa depan yang le
 Alert : Jangan Lupa donwload dan simpan QR Code yang tertera di Website Pendaftaran karena nanti akan digunakan untuk absen ketika di lokasi acara
 
 Silakan bergabung ke gup peserta :
-https://chat.whatsapp.com/HmNgm3ypqNd3cYuSqG6hBq
+${isAlumni ? waGroupAlumni : waGroup}
 Sampai jumpa di acara! ✨
 `
 
