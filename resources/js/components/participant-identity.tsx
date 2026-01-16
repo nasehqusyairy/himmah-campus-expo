@@ -38,7 +38,7 @@ export default function ParticipantIdentity({ participants, setParticipants, inv
     useEffect(() => {
         const onnextfun = async () => {
             await axios.post(participantNames().url, { names: participants })
-            setCurrentStep(isAlumnus ? 3 : 2)
+            setCurrentStep((isAlumnus || invoice?.agency?.level?.name.includes('Delegasi')) ? 3 : 2)
         }
         setOnNext((() => onnextfun) as any)
     }, [participants]);
