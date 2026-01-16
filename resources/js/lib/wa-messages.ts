@@ -1,4 +1,7 @@
-export const accMessage = `
+export const waGroup = `https://chat.whatsapp.com/HmNgm3ypqNd3cYuSqG6hBq`
+export const waGroupAlumni = `https://chat.whatsapp.com/DL6dlTfE8vSCmk7KEktuJ9`
+
+export const accMessage = (isAlumni: boolean) => `
 Selamat! Pendaftaran Anda sebagai peserta Seminar Pelajar Gen-Z yang diselenggarakan oleh HIMMAH Campus Expo di BCC Bayt Al Hikmah telah berhasil diverifikasi.
 
 📅 Tanggal: 31 Januari 2026
