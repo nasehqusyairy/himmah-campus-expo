@@ -38,14 +38,14 @@ export default () => {
                     </div>
                 </div>
 
-                <div className="relative group flex justify-center lg:justify-end">
+                <div className="relative group pb-12 flex justify-center lg:justify-end">
                     {/* Hexagonal Background Frame */}
-                    <div className="absolute inset-0 bg-primary/20 clip-hexagon animate-pulse-slow"></div>
+                    <div className="absolute inset-0 rounded-3xl bg-primary/20 clip-hexagon animate-pulse-slow"></div>
                     <div className="relative w-full max-w-lg aspect-square">
                         <img
                             src={preview}
                             alt="Event Visualization"
-                            className="w-full h-full object-cover rounded-3xl border-2 border-primary/50 shadow-2xl transition-transform group-hover:scale-[1.02]"
+                            className="w-full h-full object-cover  rounded-3xl border-2 border-primary/50 shadow-2xl transition-transform group-hover:scale-[1.02]"
                         />
                         {/* Overlay Badges */}
                         <div className="absolute -top-6 -right-6 bg-primary text-black p-4 rounded-2xl shadow-xl transform rotate-3">

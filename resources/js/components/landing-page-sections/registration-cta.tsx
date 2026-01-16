@@ -14,7 +14,7 @@ export default () => {
                         <span className="underline decoration-black/30 underline-offset-8">WAWASAN?</span>
                     </h2>
                     <p className="text-teal-100 text-xl mb-12 max-w-xl mx-auto font-medium">
-                        Jangan lewatkan kesempatan untuk bertemu Shakira Amirah dan perwakilan dari universitas-universitas ternama di Indonesia.
+                        Ikuti Seminar Pelajar Gen-Z & HIMMAH Campus Expo untuk dapatkan wawasan eksklusif dan tips jitu langsung dari tokoh akademis. Kami hadir untuk menjembatani posisimu saat ini dengan kesuksesan studi yang kamu inginkan. Saatnya level up pengetahuanmu dan buka jalan menuju masa depan cerah. Daftar sekarang!"
                     </p>
                     <Link href={login().url} className="inline-flex items-center gap-4 bg-white text-teal-950 px-10 py-5 rounded-full lg:text-2xl font-black hover:bg-teal-50 transition-all transform hover:scale-105 shadow-2xl">
                         DAFTAR SEKARANG <ArrowRight />

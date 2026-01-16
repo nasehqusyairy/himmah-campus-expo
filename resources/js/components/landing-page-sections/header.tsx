@@ -25,13 +25,13 @@ export default function Header() {
                     <span className="font-bold text-xl tracking-tight hidden sm:inline-block uppercase">Seminar Pelajar <span className="text-primary">Gen-Z</span> </span>
                 </div>
                 <nav className="hidden md:flex gap-8 text-sm font-semibold uppercase tracking-widest text-gray-300">
-                    <a href="#" className="hover:transition-colors">Beranda</a>
-                    <a href="#about" className="hover:transition-colors">Tentang</a>
-                    <a href="#speaker" className="hover:transition-colors">Pembicara</a>
-                    <a href="#details" className="hover:transition-colors">Info</a>
-                    <a href="#contact" className="hover:transition-colors">Kontak</a>
+                    <a href="#" className="hover:transition-colors hover:text-primary">Beranda</a>
+                    <a href="#about" className="hover:transition-colors hover:text-primary">Tentang</a>
+                    <a href="#speaker" className="hover:transition-colors hover:text-primary">Pembicara</a>
+                    <a href="#details" className="hover:transition-colors hover:text-primary">Info</a>
+                    <a href="#contact" className="hover:transition-colors hover:text-primary">Kontak</a>
                 </nav>
-                <Button className="text-white px-6 py-2 rounded-full font-bold transition-all transform hover:scale-105 shadow-[0_0_15px_rgba(20,184,166,0.4)]" asChild>
+                <Button className="text-white px-6 py-2 rounded-full font-bold transition-all transform hover:scale-105 hover:text-black shadow-[0_0_15px_rgba(20,184,166,0.4)]" asChild>
                     <Link href={login().url}>Daftar Sekarang</Link>
                 </Button>
             </div>

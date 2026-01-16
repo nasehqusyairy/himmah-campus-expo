@@ -33,7 +33,7 @@ export default () => {
                         </div>
                     </div>
                 </div>
-                <iframe className="border-0 w-full rounded-3xl mb-4" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3954.1990773300327!2d112.91056622500372!3d-7.661733492354737!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7c8a9d8ea511f%3A0xb6d54ddcfd7a5ad8!2sPondok%20Pesantren%20Bayt%20Al-Hikmah!5e0!3m2!1sid!2sid!4v1768262321377!5m2!1sid!2sid" width="600" height="450" allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+                <iframe className="border-0 w-full rounded-3xl mb-4  " src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3954.1990773300327!2d112.91056622500372!3d-7.661733492354737!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7c8a9d8ea511f%3A0xb6d54ddcfd7a5ad8!2sPondok%20Pesantren%20Bayt%20Al-Hikmah!5e0!3m2!1sid!2sid!4v1768262321377!5m2!1sid!2sid" width="600" height="450" allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
             </div>
         </section>
     );
