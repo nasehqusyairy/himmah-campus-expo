@@ -11,6 +11,7 @@ export default () => {
                         <div className="absolute -inset-4 bg-gradient-to-tr from-primary to-transparent rounded-full opacity-20 blur-2xl"></div>
                         <img
                             src={speaker}
+                            loading="lazy"
                             alt="Shakira Amirah"
                             className="relative w-full rounded-2xl grayscale hover:grayscale-0 transition-all duration-500"
                         />

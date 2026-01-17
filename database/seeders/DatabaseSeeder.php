@@ -50,6 +50,15 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Alumni'
             ],
             [
+                'name' => 'Delegasi Alumni'
+            ],
+            [
+                'name' => 'Delegasi SMP/Sederajat'
+            ],
+            [
+                'name' => 'Delegasi SMA/Sederajat'
+            ],
+            [
                 'name' => 'Lainnya'
             ]
         ];

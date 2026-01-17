@@ -10,6 +10,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class RegistrationService
 {
@@ -25,7 +26,7 @@ class RegistrationService
         /**
          * @var User $user
          */
-        $user->load('invoice', 'step');
+        $user->load('invoice.agency.level', 'step');
 
         $invoice = $user->invoice;
         $step = $user->step->last;
@@ -71,7 +72,7 @@ class RegistrationService
 
             $invoice->wa =  $data['phone'];
             $invoice->save();
-            return $invoice->load('agency');
+            return $invoice->load('agency.level');
         });
     }
 
@@ -93,10 +94,18 @@ class RegistrationService
             $invoice->participants()->delete();
 
             // Tambahkan participant baru
-            if ($invoice->agency_id === 1) {
-                $invoice->participants()->create([
-                    'name' => $names[0]
-                ]);
+            if ($invoice->agency_id === 1 || Str::contains($invoice->agency->name, 'Delegasi', true)) {
+                if ($invoice->agency_id === 1) {
+                    $invoice->participants()->create([
+                        'name' => $names[0]
+                    ]);
+                } else {
+                    $invoice->participants()->createMany(
+                        collect($names)->map(fn($name) => [
+                            'name' => $name,
+                        ])->toArray()
+                    );
+                }
                 $user->step()->update(['last' => 3]);
             } else {
                 $invoice->participants()->createMany(

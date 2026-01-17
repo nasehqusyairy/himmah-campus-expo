@@ -66,7 +66,7 @@ export type Agency = {
     id: number
     name: string
     level_id: number
-    level: Level
+    level?: Level
 }
 
 export type Level = {

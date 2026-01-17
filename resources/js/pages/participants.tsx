@@ -73,7 +73,7 @@ function columnRefs(
         {
             id: 'level',
             header: 'Jenis',
-            accessorFn: (d) => d.invoice.agency!.level.name
+            accessorFn: (d) => d.invoice.agency!.level?.name
         }, {
             id: 'status',
             header: 'Status',

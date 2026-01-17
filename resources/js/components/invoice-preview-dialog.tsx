@@ -61,7 +61,7 @@ export default function InvoicePreviewDialog({ users, setUsers, userIndex, setUs
                                 <TableCell>
                                     Jenis Instansi
                                 </TableCell>
-                                <TableCell>: {user?.invoice?.agency?.level.name}</TableCell>
+                                <TableCell>: {user?.invoice?.agency?.level?.name}</TableCell>
                             </TableRow>
                             <TableRow>
                                 <TableCell>
@@ -175,7 +175,7 @@ export default function InvoicePreviewDialog({ users, setUsers, userIndex, setUs
                                             newUsers[userIndex!].invoice!.verified_at = res.data.verified_at
                                             setUsers(newUsers)
                                             setUserIndex(undefined)
-                                            window.open(`https://api.whatsapp.com/send/?phone=62${user.invoice?.wa}&text=${encodeURIComponent(accMessage)}`, '_blank')
+                                            window.open(`https://api.whatsapp.com/send/?phone=62${user.invoice?.wa}&text=${encodeURIComponent(accMessage(user.invoice?.agency?.level?.name.includes('Alumni') === true))}`, '_blank')
                                         }).catch(err => {
                                             let message
                                             if (err instanceof AxiosError) {
