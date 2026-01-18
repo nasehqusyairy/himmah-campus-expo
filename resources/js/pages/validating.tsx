@@ -8,16 +8,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import AppLayout from "@/layouts/app-layout"
 import participants from "@/routes/participants";
 import validating, { deleteUser } from "@/routes/validating";
-import { BreadcrumbItem, Paginated, Participant, User } from "@/types";
+import { BreadcrumbItem, Level, Paginated, Participant, User } from "@/types";
 import { Form } from "@inertiajs/react";
 import { ColumnDef, getCoreRowModel, useReactTable, VisibilityState } from "@tanstack/react-table";
 import axios, { AxiosError } from "axios";
 import { MoreVertical, QrCode, Search, SquareArrowOutUpRight, UserX } from "lucide-react";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 function columnRefs(
@@ -45,6 +46,16 @@ function columnRefs(
                     </div>
                 )
             }
+        },
+        {
+            id: 'agency',
+            header: 'Instansi',
+            accessorFn: (d) => d.invoice?.agency?.name || '-'
+        },
+        {
+            id: 'level',
+            header: 'Jenis',
+            accessorFn: (d) => d.invoice?.agency?.level?.name || '-'
         },
         {
             id: 'wa',
@@ -112,9 +123,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 type Props = {
     users: Paginated<User>
+    levels: Level[]
 }
 
-export default ({ users: paginatedUsers }: Props) => {
+export default ({ users: paginatedUsers, levels }: Props) => {
     const [users, setUsers] = useState(paginatedUsers.data);
     const [preview, setPreview] = useState<number>();
     const [isdeletingUser, setIsdeletingUser] = useState(false);
@@ -124,6 +136,28 @@ export default ({ users: paginatedUsers }: Props) => {
         agency: false,
         level: false
     })
+
+    const isFirstRender = useRef(true)
+
+    useEffect(() => {
+        const columnVisibilityCache = localStorage.getItem('validatingColumns')
+        if (columnVisibilityCache) {
+            setColumnVisibility(JSON.parse(columnVisibilityCache))
+        }
+    }, []);
+
+    useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false
+            return
+        }
+
+        localStorage.setItem(
+            'validatingColumns',
+            JSON.stringify(columnVisibility)
+        )
+    }, [columnVisibility])
+
 
     const columns = columnRefs(setPreview, setUserIdToDelete)
 
@@ -143,16 +177,25 @@ export default ({ users: paginatedUsers }: Props) => {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <div className="lg:flex flex-row-reverse justify-between gap-2 mb-4">
-                <Form className="flex items-center gap-2 mb-4 lg:m-0">
-                    <Input name="search" defaultValue={(new URLSearchParams(window.location.search)).get('search') || ''} placeholder="Cari berdasarkan nama..." />
-                    <div>
-                        <Button size={"icon"}>
-                            <Search />
-                        </Button>
-                    </div>
-                </Form>
+            <div className="lg:flex grid lg:justify-between gap-2 mb-4">
                 <ColumnSelect table={{ ...table }} />
+                <Form className="lg:flex grid lg:items-center gap-2 mb-4 lg:m-0">
+                    <Select name="level" defaultValue={(new URLSearchParams(window.location.search)).get('level') || 'all'}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Pilih jenis instansi..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value={'all'}>Semua Jenis</SelectItem>
+                            {levels.map(level => (
+                                <SelectItem value={level.id.toString()} key={level.id}>{level.name}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                    <Input name="search" defaultValue={(new URLSearchParams(window.location.search)).get('search') || ''} placeholder="Cari nama..." />
+                    <Button>
+                        Cari
+                    </Button>
+                </Form>
             </div>
             <DataTable columns={columns} table={{ ...table }} />
             <DataTablePagination pagination={paginatedUsers} />

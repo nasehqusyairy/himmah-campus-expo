@@ -57,7 +57,7 @@ export type Option = {
 export type Participant = {
     id: number
     name: string
-    invoice: Invoice
+    invoice?: Invoice
     presence_token: string
     present_at: string
 }
