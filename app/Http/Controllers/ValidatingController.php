@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AcceptInvoiceRequest;
 use App\Http\Requests\RejectInvoiceRequest;
 use App\Models\Invoice;
+use App\Models\Level;
 use App\Models\Participant;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,28 +17,40 @@ class ValidatingController extends Controller
 {
     public function index()
     {
-        $search = request('search', '');
+        $search   = request('search', '');
+        $level_id = request('level', 'all');
+        $level_id = $level_id === 'all' ? '' : $level_id;
         $users = User::query()
             ->leftJoin('invoices', 'invoices.user_id', '=', 'users.id')
             ->leftJoin('steps', 'steps.user_id', '=', 'users.id')
             ->with('invoice.participants', 'step', 'invoice.agency.level')
             ->where('users.name', 'like', "%$search%")
             ->where('users.role_id', 2)
+
+            ->when($level_id, function ($query) use ($level_id) {
+                $query->whereHas('invoice.agency.level', function ($q) use ($level_id) {
+                    $q->where('levels.id', $level_id);
+                });
+            })
+
             ->orderByRaw("
-                CASE
-                    WHEN steps.last = 3 AND invoices.verified_at IS NULL THEN 0
-                    WHEN steps.last < 3 AND invoices.verified_at IS NULL THEN 1
-                    ELSE 2
-                END
-            ")
-            ->orderBy('steps.last', 'desc')   // opsional: last lebih besar dulu
-            ->orderBy('users.id')              // stabil untuk pagination
+            CASE
+                WHEN steps.last = 3 AND invoices.verified_at IS NULL THEN 0
+                WHEN steps.last < 3 AND invoices.verified_at IS NULL THEN 1
+                ELSE 2
+            END
+        ")
+            ->orderBy('steps.last', 'desc')
+            ->orderBy('users.id')
             ->select('users.*')
             ->paginate(10)
             ->withQueryString();
 
-        return Inertia::render('validating', compact('users'));
+        $levels = Level::all();
+
+        return Inertia::render('validating', compact('users', 'levels'));
     }
+
 
     public function accept(AcceptInvoiceRequest $request)
     {
