@@ -31,22 +31,43 @@ const memberTask: Task[] = [
 const adminTasks: Task[] = [
     {
         title: "Periksa Pendaftaran",
-        description: "KERJA KERJA KERJA!!!",
+        description: "Buka Halaman Validasi Pendaftaran",
         url: validating.index().url
     }
 ]
 
-export default function Dashboard() {
+type Props = {
+    summary: {
+        label: string;
+        total: number;
+    }[]
+}
+
+export default function Dashboard({ summary }: Props) {
     const { auth: { user } } = usePage<SharedData>().props
     const tasks = user.role_id === 2 ? memberTask : adminTasks
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
+            <h1 className='mb-4'>Tugas</h1>
             <ItemGroup className="gap-4">
                 {tasks.map((task, i) => (
                     <TaskItem key={i} task={task} />
                 ))}
             </ItemGroup>
+            {summary.length > 0 && (
+                <div className="mt-4">
+                    <h2 className="mb-4">Ringkasan</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {summary.map((item, i) => (
+                            <div key={i} className="p-4 rounded-md border flex flex-col-reverse">
+                                <h2 className='text-muted-foreground'>{item.label}</h2>
+                                <p>{item.total}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
         </AppLayout>
     );
 }
