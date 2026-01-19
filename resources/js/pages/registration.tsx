@@ -67,7 +67,7 @@ export default function Registration({ levels = [], invoice: invc, step, price, 
             component: <UserIdentityForm {...{ invoice, setInvoice, levels }} />
         },
         {
-            title: "Tambahkan Peserta " + (auth.user.invoice?.agency_id !== 1 ? "(Bisa lebih dari satu)" : ""),
+            title: "Tambahkan Peserta " + (invoice.agency_id !== 1 ? "(Bisa lebih dari satu)" : ""),
             component: <ParticipantIdentity {...{ participants, setParticipants, invoice }} />
         },
         {
