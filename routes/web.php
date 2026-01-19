@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 use App\Http\Controllers\Auth\GoogleController;
-
+use App\Http\Middleware\AdminOnly;
 use App\Models\Views\ViewAlumniDelegation;
 use App\Models\Views\ViewAlumni;
 use App\Models\Views\ViewCollage;
@@ -85,7 +85,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [ParticipantController::class, 'index'])->name('participants.index');
     });
 
-    Route::prefix('validating')->group(function () {
+    Route::middleware(AdminOnly::class)->prefix('presence')->group(function () {
+        Route::get('/', function () {
+            return Inertia::render('presence');
+        })->name('presence.index');
+    });
+    Route::middleware(AdminOnly::class)->prefix('validating')->group(function () {
         Route::get('/', [ValidatingController::class, 'index'])->name('validating.index');
         Route::post('/accept', [ValidatingController::class, 'accept'])->name('validating.accept');
         Route::post('/reject', [ValidatingController::class, 'reject'])->name('validating.reject');
