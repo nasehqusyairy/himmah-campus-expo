@@ -48,6 +48,8 @@ export default function QrScanner() {
         e.preventDefault();
         console.log("Data yang dikirim:", qrValue);
         alert(`Data terkirim: ${qrValue}`);
+
+
     };
 
     return (

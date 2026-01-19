@@ -146,15 +146,17 @@ export default ({ participants, levels }: Props) => {
     const [qr, setQr] = useState<string>();
     const [qrOwner, setQrOwner] = useState('');
 
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-        agency: false,
-        level: false
-    })
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
     useEffect(() => {
         const columnVisibilityCache = localStorage.getItem('participantColumns')
         if (columnVisibilityCache) {
             setColumnVisibility(JSON.parse(columnVisibilityCache))
+        } else {
+            setColumnVisibility({
+                agency: false,
+                level: false
+            })
         }
     }, []);
 
@@ -192,7 +194,7 @@ export default ({ participants, levels }: Props) => {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Daftar Peserta" />
-            <TableFilter {...{ levels, table }} />
+            <TableFilter levels={levels} table={{ ...table }} />
             <DataTable columns={columns} table={{ ...table }} />
             <DataTablePagination pagination={participants} />
             <QRDialog qr={qr} setQr={setQr} qrOwner={qrOwner} />

@@ -179,7 +179,7 @@ export default ({ users: paginatedUsers, levels }: Props) => {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Validasi Pendaftaran" />
-            <TableFilter {...{ levels, table }} />
+            <TableFilter levels={levels} table={{ ...table }} />
             <DataTable columns={columns} table={{ ...table }} />
             <DataTablePagination pagination={paginatedUsers} />
             <InvoicePreviewDialog users={users} setUsers={setUsers} setUserIndex={setPreview} userIndex={preview} />
