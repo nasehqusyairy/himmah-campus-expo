@@ -94,7 +94,7 @@ class RegistrationService
             $invoice->participants()->delete();
 
             // Tambahkan participant baru
-            if ($invoice->agency_id === 1 || Str::contains($invoice->agency->name, 'Delegasi', true)) {
+            if ($invoice->agency_id === 1 || Str::contains($invoice->agency->level->name, 'Delegasi', true)) {
                 if ($invoice->agency_id === 1) {
                     $invoice->participants()->create([
                         'name' => $names[0]
