@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import AppLayout from "@/layouts/app-layout"
 import participants from "@/routes/participants";
 import { BreadcrumbItem, Level, Paginated, Participant } from "@/types";
-import { Form } from "@inertiajs/react";
+import { Form, Head } from "@inertiajs/react";
 import { ColumnDef, getCoreRowModel, useReactTable, VisibilityState } from "@tanstack/react-table";
 import { Download, Medal, MoreVertical, QrCode, Search } from "lucide-react";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
@@ -131,7 +131,7 @@ function columnRefs(
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Peserta',
+        title: 'Daftar Peserta',
         href: participants.index().url,
     },
 ];
@@ -190,6 +190,7 @@ export default ({ participants, levels }: Props) => {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Daftar Peserta" />
             <div className="lg:flex grid lg:justify-between gap-2 mb-4">
                 <ColumnSelect table={{ ...table }} />
                 <Form className="lg:flex grid lg:items-center gap-2 mb-4 lg:m-0">

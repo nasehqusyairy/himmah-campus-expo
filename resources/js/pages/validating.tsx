@@ -14,7 +14,7 @@ import AppLayout from "@/layouts/app-layout"
 import participants from "@/routes/participants";
 import validating, { deleteUser } from "@/routes/validating";
 import { BreadcrumbItem, Level, Paginated, Participant, User } from "@/types";
-import { Form } from "@inertiajs/react";
+import { Form, Head } from "@inertiajs/react";
 import { ColumnDef, getCoreRowModel, useReactTable, VisibilityState } from "@tanstack/react-table";
 import axios, { AxiosError } from "axios";
 import { MoreVertical, QrCode, Search, SquareArrowOutUpRight, UserX } from "lucide-react";
@@ -177,6 +177,7 @@ export default ({ users: paginatedUsers, levels }: Props) => {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
+            <Head title="Validasi Pendaftaran" />
             <div className="lg:flex grid lg:justify-between gap-2 mb-4">
                 <ColumnSelect table={{ ...table }} />
                 <Form className="lg:flex grid lg:items-center gap-2 mb-4 lg:m-0">

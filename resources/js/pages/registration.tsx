@@ -16,7 +16,7 @@ import { ReactNode, useState } from "react";
 const breadcrumbs: BreadcrumbItem[] = [
     {
         href: registration.index().url,
-        title: 'Pendaftaran Peserta'
+        title: 'Pendaftaran'
     }
 ]
 
@@ -82,6 +82,7 @@ export default function Registration({ levels = [], invoice: invc, step, price, 
 
     return (
         <Layout>
+            <Head title="Pendaftaran" />
             <Alert className="mb-4">
                 <TriangleAlert />
                 <AlertTitle>Peringatan</AlertTitle>
