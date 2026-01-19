@@ -27,9 +27,9 @@ export default function DeleteUser() {
             />
             <div className="space-y-4 rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
                 <div className="relative space-y-0.5 text-red-600 dark:text-red-100">
-                    <p className="font-medium">Warning</p>
+                    <p className="font-medium">Peringatan</p>
                     <p className="text-sm">
-                        Please proceed with caution, this cannot be undone.
+                        Harap berhati-hati, tindakan ini tidak dapat dibatalkan.
                     </p>
                 </div>
 
@@ -39,18 +39,18 @@ export default function DeleteUser() {
                             variant="destructive"
                             data-test="delete-user-button"
                         >
-                            Delete account
+                            Hapus Akun
                         </Button>
                     </DialogTrigger>
                     <DialogContent>
                         <DialogTitle>
-                            Are you sure you want to delete your account?
+                            Apakah Anda yakin ingin menghapus akun Anda?
                         </DialogTitle>
                         <DialogDescription>
-                            Once your account is deleted, all of its resources
-                            and data will also be permanently deleted. Please
-                            enter your password to confirm you would like to
-                            permanently delete your account.
+                            Setelah akun Anda dihapus, semua sumber daya dan
+                            data Anda akan dihapus secara permanen. Sebelum
+                            menghapus akun Anda, harap unduh data atau informasi
+                            apa pun yang ingin Anda pertahankan.
                         </DialogDescription>
 
                         <Form
@@ -92,7 +92,7 @@ export default function DeleteUser() {
                                                     resetAndClearErrors()
                                                 }
                                             >
-                                                Cancel
+                                                Batal
                                             </Button>
                                         </DialogClose>
 
@@ -105,7 +105,7 @@ export default function DeleteUser() {
                                                 type="submit"
                                                 data-test="confirm-delete-user-button"
                                             >
-                                                Delete account
+                                                Hapus Akun
                                             </button>
                                         </Button>
                                     </DialogFooter>
