@@ -3,6 +3,7 @@ import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import InvoicePreviewDialog from "@/components/invoice-preview-dialog";
 import QRDialog from "@/components/qr-dialog";
+import TableFilter from "@/components/table-filter";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -178,26 +179,7 @@ export default ({ users: paginatedUsers, levels }: Props) => {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Validasi Pendaftaran" />
-            <div className="lg:flex grid lg:justify-between gap-2 mb-4">
-                <ColumnSelect table={{ ...table }} />
-                <Form className="lg:flex grid lg:items-center gap-2 mb-4 lg:m-0">
-                    <Select name="level" defaultValue={(new URLSearchParams(window.location.search)).get('level') || 'all'}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Pilih jenis instansi..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value={'all'}>Semua Jenis</SelectItem>
-                            {levels.map(level => (
-                                <SelectItem value={level.id.toString()} key={level.id}>{level.name}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <Input name="search" defaultValue={(new URLSearchParams(window.location.search)).get('search') || ''} placeholder="Cari nama..." />
-                    <Button>
-                        Cari
-                    </Button>
-                </Form>
-            </div>
+            <TableFilter {...{ levels, table }} />
             <DataTable columns={columns} table={{ ...table }} />
             <DataTablePagination pagination={paginatedUsers} />
             <InvoicePreviewDialog users={users} setUsers={setUsers} setUserIndex={setPreview} userIndex={preview} />

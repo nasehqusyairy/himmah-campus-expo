@@ -2,6 +2,7 @@ import ColumnSelect from "@/components/column-select";
 import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import QRDialog from "@/components/qr-dialog";
+import TableFilter from "@/components/table-filter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -191,26 +192,7 @@ export default ({ participants, levels }: Props) => {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Daftar Peserta" />
-            <div className="lg:flex grid lg:justify-between gap-2 mb-4">
-                <ColumnSelect table={{ ...table }} />
-                <Form className="lg:flex grid lg:items-center gap-2 mb-4 lg:m-0">
-                    <Select name="level" defaultValue={(new URLSearchParams(window.location.search)).get('level') || 'all'}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Pilih jenis instansi..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value={'all'}>Semua Jenis</SelectItem>
-                            {levels.map(level => (
-                                <SelectItem value={level.id.toString()} key={level.id}>{level.name}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                    <Input name="search" defaultValue={(new URLSearchParams(window.location.search)).get('search') || ''} placeholder="Cari nama..." />
-                    <Button>
-                        Cari
-                    </Button>
-                </Form>
-            </div>
+            <TableFilter {...{ levels, table }} />
             <DataTable columns={columns} table={{ ...table }} />
             <DataTablePagination pagination={participants} />
             <QRDialog qr={qr} setQr={setQr} qrOwner={qrOwner} />
