@@ -84,7 +84,7 @@ export default function QrScanner() {
             {/* Box Kamera */}
             <div className="w-full max-w-80 aspect-square overflow-hidden border rounded-md" id="reader" />
             {/* Control: Ganti Kamera */}
-            <div className="w-full max-w-[300px] space-y-4">
+            <div className="w-full max-w-80 space-y-4">
                 <div className="space-y-2 text-left">
                     <Label className="flex items-center gap-2">
                         Pilih Kamera
@@ -93,7 +93,7 @@ export default function QrScanner() {
                         value={selectedCameraId}
                         onValueChange={(val) => setSelectedCameraId(val)}
                     >
-                        <SelectTrigger className="w-full bg-white">
+                        <SelectTrigger>
                             <SelectValue placeholder="Pilih kamera..." />
                         </SelectTrigger>
                         <SelectContent>
