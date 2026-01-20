@@ -50,13 +50,18 @@ export default function ConfirmPresenceDialog({ token, onClose }: Props) {
 
     }
 
+    const onDone = () => {
+        setIsUnDone(false)
+        onClose()
+    }
+
     return (
         <Dialog open={token !== undefined}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Konfirmasi Kehadiran</DialogTitle>
                     {participant ? (
-                        <PresenceAlert {...{ isUndoing, isUnDone, participant, undoPresence, onDone: onClose }} />
+                        <PresenceAlert {...{ isUndoing, isUnDone, participant, undoPresence, onDone }} />
                     ) : (
                         <Card>
                             <CardContent>
