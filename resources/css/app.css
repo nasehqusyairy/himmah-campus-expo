@@ -155,4 +155,9 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
+
+    #qr-shaded-region{
+        aspect-ratio: 1/1!important;
+        height: unset!important;
+    }
 }

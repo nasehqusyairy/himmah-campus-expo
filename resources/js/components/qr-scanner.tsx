@@ -34,10 +34,17 @@ export default function QrScanner() {
         };
 
         initCameras();
+
+        return () => {
+            if (scannerRef.current?.isScanning) {
+                scannerRef.current.stop().catch(console.error);
+            }
+        };
     }, []);
 
     // 2. Fungsi untuk Start/Restart Kamera
     const startScanning = async (cameraId: string) => {
+
         // Jika sedang scanning, stop dulu sebelum pindah kamera
         if (scannerRef.current?.isScanning) {
             await scannerRef.current.stop();
@@ -52,15 +59,13 @@ export default function QrScanner() {
                 {
                     fps: 15,
                     qrbox: { width: 250, height: 250 },
-                    aspectRatio: 1.0,
+                    aspectRatio: 1,
                 },
                 (decodedText) => {
                     setToken(extractToken(decodedText));
                 },
                 () => { } // Ignore scan errors
             );
-            const camera = cameras.find(el => el.id === cameraId)
-            toast.success(`Beralih ke kamera ${camera?.label} (${camera?.id})`)
         } catch (err) {
             toast.error("Gagal memulai kamera yang dipilih.");
         }
@@ -71,12 +76,6 @@ export default function QrScanner() {
         if (selectedCameraId) {
             startScanning(selectedCameraId);
         }
-
-        return () => {
-            if (scannerRef.current?.isScanning) {
-                scannerRef.current.stop().catch(console.error);
-            }
-        };
     }, [selectedCameraId]);
 
     return (
