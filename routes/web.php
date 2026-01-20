@@ -40,6 +40,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::middleware(AdminOnly::class)->prefix('presence')->group(function () {
         Route::get('/', [PresenceCotroller::class, 'index'])->name('presence.index');
+        Route::get('/{token}', [PresenceCotroller::class, 'confirm'])->name('presence.confirm');
+        Route::delete('/undo/{participant}', [PresenceCotroller::class, 'undo'])->name('presence.undo');
     });
     Route::middleware(AdminOnly::class)->prefix('validating')->group(function () {
         Route::get('/', [ValidatingController::class, 'index'])->name('validating.index');

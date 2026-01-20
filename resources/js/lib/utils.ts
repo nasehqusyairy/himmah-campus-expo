@@ -39,3 +39,23 @@ export function parseQueryString(url: string): Record<string, string> {
 
     return result
 }
+
+/**
+ * Mengambil token dari URL setelah segment path tertentu.
+ * @param url - String URL lengkap atau path
+ * @param parentSegment - Nama folder/segment sebelum token (default: 'presence')
+ * @returns string | undefined
+ */
+export const extractToken = (url: string, parentSegment: string = "presence"): string | undefined => {
+    // Penjelasan Regex:
+    // [\/]           -> Mencari karakter "/"
+    // ${parentSegment} -> Nama segment yang ditentukan (misal: presence)
+    // [\/]           -> Mencari karakter "/" setelahnya
+    // ([^\/?#]+)     -> Group 1: Ambil semua karakter kecuali "/", "?", atau "#"
+    const regex = new RegExp(`[\\/]${parentSegment}[\\/]([^\\/?#]+)`);
+
+    const match = url.match(regex);
+
+    // Jika ditemukan, kembalikan Group 1 (index 1), jika tidak kembalikan undefined
+    return match ? match[1] : undefined;
+};
