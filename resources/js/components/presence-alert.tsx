@@ -9,9 +9,10 @@ type Props = {
     isUndoing: boolean
     participant: Participant
     undoPresence: (id: number) => Promise<void>
+    onDone?: () => void
 }
 
-export default function PresenceAlert({ isUndoing, isUnDone, participant, undoPresence }: Props) {
+export default function PresenceAlert({ isUndoing, isUnDone, participant, undoPresence, onDone }: Props) {
     return (
         <div className="flex flex-col justify-center items-center gap-6">
             <div className="size-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
@@ -32,11 +33,17 @@ export default function PresenceAlert({ isUndoing, isUnDone, participant, undoPr
                         {isUndoing ? "Membatalkan..." : "Batalkan"}
                     </Button>
                 )}
-                <Button asChild disabled={isUndoing}>
-                    <Link href={presence.index().url}>
+                {onDone !== undefined ? (
+                    <Button onClick={onDone} disabled={isUndoing}>
                         Selesai
-                    </Link>
-                </Button>
+                    </Button>
+                ) : (
+                    <Button asChild disabled={isUndoing}>
+                        <Link href={presence.index().url}>
+                            Selesai
+                        </Link>
+                    </Button>
+                )}
             </div>
         </div>
     )

@@ -78,6 +78,8 @@ export default function QrScanner() {
         }
     }, [selectedCameraId]);
 
+    const closeDialog = () => setToken(undefined)
+
     return (
         <div className="flex flex-col items-center justify-center gap-4">
 
@@ -105,7 +107,7 @@ export default function QrScanner() {
                         </SelectContent>
                     </Select>
                 </div>
-                <ConfirmPresenceDialog token={token} />
+                <ConfirmPresenceDialog token={token} onClose={closeDialog} />
             </div>
         </div>
     );

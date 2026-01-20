@@ -17,9 +17,10 @@ import { Spinner } from "./ui/spinner";
 
 type Props = {
     token?: string
+    onClose: () => void
 }
 
-export default function ConfirmPresenceDialog({ token }: Props) {
+export default function ConfirmPresenceDialog({ token, onClose }: Props) {
     const [isUnDone, setIsUnDone] = useState(false);
     const [isUndoing, setIsUndoing] = useState(false);
     const [participant, setParticipant] = useState<Participant>();
@@ -55,7 +56,7 @@ export default function ConfirmPresenceDialog({ token }: Props) {
                 <DialogHeader>
                     <DialogTitle>Konfirmasi Kehadiran</DialogTitle>
                     {participant ? (
-                        <PresenceAlert {...{ isUndoing, isUnDone, participant, undoPresence }} />
+                        <PresenceAlert {...{ isUndoing, isUnDone, participant, undoPresence, onDone: onClose }} />
                     ) : (
                         <Card>
                             <CardContent>
