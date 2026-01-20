@@ -20,7 +20,6 @@ export default function QrScanner() {
         const initCameras = async () => {
             try {
                 const devices = await Html5Qrcode.getCameras();
-                console.log(devices);
 
                 if (devices && devices.length > 0) {
                     setCameras(devices.map(d => ({ id: d.id, label: d.label })));
@@ -60,6 +59,8 @@ export default function QrScanner() {
                 },
                 () => { } // Ignore scan errors
             );
+            const camera = cameras.find(el => el.id === cameraId)
+            toast.success(`Beralih ke kamera ${camera?.label} (${camera?.id})`)
         } catch (err) {
             toast.error("Gagal memulai kamera yang dipilih.");
         }
@@ -87,7 +88,7 @@ export default function QrScanner() {
             <div className="w-full max-w-80 space-y-4">
                 <div className="space-y-2 text-left">
                     <Label className="flex items-center gap-2">
-                        Pilih Kamera
+                        Kamera
                     </Label>
                     <Select
                         value={selectedCameraId}
