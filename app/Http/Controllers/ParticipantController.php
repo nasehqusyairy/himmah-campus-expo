@@ -18,7 +18,7 @@ class ParticipantController extends Controller
         $search   = request('search', '');
         $level_id = request('level', '');
         $level_id = $level_id === 'all' ? '' : $level_id;
-        $participants = Participant::with('invoice.agency.level')
+        $participants = Participant::with('invoice.agency.level', 'certificate')
             ->where('name', 'like', "%$search%")
 
             // Batasi data jika role = user (misal role_id = 2)
@@ -39,8 +39,9 @@ class ParticipantController extends Controller
             ->withQueryString();
 
         $levels = Level::all();
+        $certificateConfig = config('certificate');
 
-        return Inertia::render('participants', compact('participants', 'levels'));
+        return Inertia::render('participants', compact('participants', 'levels', 'certificateConfig'));
     }
 
 

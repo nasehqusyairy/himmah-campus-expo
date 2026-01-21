@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Views\ViewAlumni;
+// use App\Models\Views\ViewAlumni;
 use App\Models\Views\ViewAlumniDelegation;
 use App\Models\Views\ViewCollage;
 use App\Models\Views\ViewNeedValidation;
@@ -20,10 +20,10 @@ class DashboardController extends Controller
     public function index()
     {
         $summary = Auth::user()->role_id === 1 ? [
-            [
-                'label' => 'Alumni',
-                'total' => ViewAlumni::count('*'),
-            ],
+            // [
+            //     'label' => 'Alumni',
+            //     'total' => ViewAlumni::count('*'),
+            // ],
             [
                 'label' => 'Delegasi Alumni',
                 'total' => ViewAlumniDelegation::count('*'),

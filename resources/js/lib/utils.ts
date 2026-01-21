@@ -17,8 +17,9 @@ export function resolveUrl(url: NonNullable<InertiaLinkProps['href']>): string {
     return typeof url === 'string' ? url : url.url;
 }
 
-export function capitalizeWords(str: string): string {
-    return str.replace(/\b\w/g, char => char.toUpperCase());
+export function capitalizeWords(str: string, isLowerFirst = false): string {
+    const s = isLowerFirst ? str.toLowerCase() : str
+    return s.replace(/\b\w/g, char => char.toUpperCase());
 }
 
 export function toRupiah(value: number) {
@@ -59,3 +60,7 @@ export const extractToken = (url: string, parentSegment: string = "presence"): s
     // Jika ditemukan, kembalikan Group 1 (index 1), jika tidak kembalikan undefined
     return match ? match[1] : undefined;
 };
+
+export function toFourDigit(value: number): string {
+    return value.toString().padStart(4, '0');
+}

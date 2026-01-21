@@ -17,6 +17,9 @@ class PresenceCotroller extends Controller
     {
         $participant = Participant::where('presence_token', $token)->firstOrFail();
         $participant->update(['present_at' => now()]);
+        $participant->certificate()->firstOrCreate([
+            'participant_id' => $participant->id
+        ]);
         $participant = $participant->load('invoice.agency.level');
 
         if (request()->expectsJson()) {

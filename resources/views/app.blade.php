@@ -49,6 +49,9 @@
     <!-- iOS Safari (status bar) -->
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
+    <link href="https://db.onlinewebfonts.com/c/18a126c786100e75a2333cf236a1aeba?family=Heading+Now" rel="stylesheet">
+    <link href="https://db.onlinewebfonts.com/c/7a45cffcf1eee0797d566deb425ebaa9?family=Formula1+Display-Regular"
+        rel="stylesheet">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 

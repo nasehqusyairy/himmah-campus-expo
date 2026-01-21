@@ -5,13 +5,13 @@ import { BreadcrumbItem } from "@/types";
 import { Head } from "@inertiajs/react";
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: "Presensi", href: index().url },
+    { title: "Scan Kode Presensi", href: index().url },
 ];
 
 export default function PresencePage() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Presensi" />
+            <Head title="Scan Kode Presensi" />
             <QrScanner />
         </AppLayout>
     );

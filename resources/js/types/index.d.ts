@@ -60,6 +60,13 @@ export type Participant = {
     invoice?: Invoice
     presence_token: string
     present_at: string
+    certificate?: Certificate
+}
+
+export type Certificate = {
+    id: number
+    participant_id: number
+    participant?: Participant
 }
 
 export type Agency = {
