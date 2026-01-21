@@ -17,7 +17,7 @@ export default function Register() {
             title="Buat Akun Baru"
             description="Masukkan detail di bawah ini untuk membuat akun"
         >
-            <Head title="Daftar" />
+            <Head title="Buat Akun Baru" />
             <Form
                 {...store.form()}
                 resetOnSuccess={['password', 'password_confirmation']}

@@ -16,7 +16,7 @@ import { ReactNode, useState } from "react";
 const breadcrumbs: BreadcrumbItem[] = [
     {
         href: registration.index().url,
-        title: 'Pendaftaran Peserta'
+        title: 'Pendaftaran'
     }
 ]
 
@@ -67,7 +67,7 @@ export default function Registration({ levels = [], invoice: invc, step, price, 
             component: <UserIdentityForm {...{ invoice, setInvoice, levels }} />
         },
         {
-            title: "Tambahkan Peserta " + (auth.user.invoice?.agency_id !== 1 ? "(Bisa lebih dari satu)" : ""),
+            title: "Tambahkan Peserta " + (invoice.agency_id !== 1 ? "(Bisa lebih dari satu)" : ""),
             component: <ParticipantIdentity {...{ participants, setParticipants, invoice }} />
         },
         {
@@ -82,6 +82,7 @@ export default function Registration({ levels = [], invoice: invc, step, price, 
 
     return (
         <Layout>
+            <Head title="Pendaftaran" />
             <Alert className="mb-4">
                 <TriangleAlert />
                 <AlertTitle>Peringatan</AlertTitle>

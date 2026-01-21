@@ -19,17 +19,23 @@ export default function AppearanceToggleTab() {
             <TabsList>
                 <TabsTrigger value="light">
                     <Sun className="h-4 w-4" />
-                    <span className="ml-1.5 text-sm">Light</span>
+                    <span className="ml-1.5 text-sm">
+                        Terang
+                    </span>
                 </TabsTrigger>
 
                 <TabsTrigger value="dark">
                     <Moon className="h-4 w-4" />
-                    <span className="ml-1.5 text-sm">Dark</span>
+                    <span className="ml-1.5 text-sm">
+                        Gelap
+                    </span>
                 </TabsTrigger>
 
                 <TabsTrigger value="system">
                     <Monitor className="h-4 w-4" />
-                    <span className="ml-1.5 text-sm">System</span>
+                    <span className="ml-1.5 text-sm">
+                        Sistem
+                    </span>
                 </TabsTrigger>
             </TabsList>
         </Tabs>

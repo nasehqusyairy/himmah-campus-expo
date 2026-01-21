@@ -13,11 +13,12 @@ import {
 import { dashboard } from '@/routes';
 import { SharedData, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { CreditCard, LayoutGrid, Notebook, Users } from 'lucide-react';
+import { CreditCard, LayoutGrid, Notebook, QrCode, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 import registration from '@/routes/registration';
 import participants from '@/routes/participants';
 import validating from '@/routes/validating';
+import presence from '@/routes/presence';
 
 const mainNavItems: NavItem[] = [
     {
@@ -43,6 +44,11 @@ export function AppSidebar() {
                 title: 'Daftar Peserta',
                 href: participants.index().url,
                 icon: Users
+            },
+            {
+                title: 'Presensi',
+                href: presence.index().url,
+                icon: QrCode
             },
         ])
     } else {

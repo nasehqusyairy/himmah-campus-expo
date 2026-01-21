@@ -29,10 +29,10 @@ export default function Login({
 
     return (
         <AuthLayout
-            title="Log in ke Akun Anda"
-            description="Masukkan email dan password untuk log in"
+            title="Log In ke Akun Anda"
+            description="Masukkan email dan password untuk log In"
         >
-            <Head title="Log in" />
+            <Head title="Log In ke Akun Anda" />
 
             <Form
                 {...store.form()}
