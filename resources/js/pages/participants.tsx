@@ -1,26 +1,52 @@
-import ColumnSelect from "@/components/column-select";
+import Certificate, { CertificateConfig } from "@/components/certificate";
 import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import QRDialog from "@/components/qr-dialog";
 import TableFilter from "@/components/table-filter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 import AppLayout from "@/layouts/app-layout"
+import { capitalizeWords, toFourDigit } from "@/lib/utils";
 import participants from "@/routes/participants";
-import { BreadcrumbItem, Level, Paginated, Participant } from "@/types";
-import { Form, Head } from "@inertiajs/react";
-import { ColumnDef, getCoreRowModel, useReactTable, VisibilityState } from "@tanstack/react-table";
-import { Download, Medal, MoreVertical, QrCode, Search } from "lucide-react";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import {
+    BreadcrumbItem,
+    Level,
+    Paginated,
+    Participant
+} from "@/types";
+import { Head } from "@inertiajs/react";
+import {
+    ColumnDef,
+    getCoreRowModel,
+    useReactTable,
+    VisibilityState
+} from "@tanstack/react-table";
+import { toPng } from "html-to-image";
+import {
+    Download,
+    Medal,
+    QrCode
+} from "lucide-react";
+import {
+    Dispatch,
+    SetStateAction,
+    useEffect,
+    useRef,
+    useState
+} from "react";
 import { toast } from "sonner";
 
 function columnRefs(
-    qr: string | undefined,
     setQr: Dispatch<SetStateAction<string | undefined>>,
-    setQrOwner: Dispatch<SetStateAction<string>>
+    setQrOwner: Dispatch<SetStateAction<string>>,
+    setCertData: Dispatch<SetStateAction<{ number: string, name: string } | undefined>>,
+    downloadCert: (name: string) => Promise<void>
 ) {
     return [
         {
@@ -33,29 +59,6 @@ function columnRefs(
                 return row.index + 1 + (pageIndex * pageSize)
             }
         },
-        // {
-        //     id: 'qr',
-        //     header: 'QR',
-        //     cell: ({ row }) => {
-        //         return (
-        //             <div className="cursor-pointer size-16 rounded-md border text-xs text-wrap text-muted-foreground flex items-center justify-center text-center" onClick={() => {
-        //                 if (!row.original.presence_token) {
-        //                     toast.error('QR masih dalam proses')
-        //                 } else {
-        //                     setQr(row.original.presence_token)
-        //                 }
-        //             }}>
-        //                 {!row.original.presence_token ? (
-        //                     <span>
-        //                         Dalam Proses
-        //                     </span>
-        //                 ) : (
-        //                     <QrCode />
-        //                 )}
-        //             </div>
-        //         )
-        //     }
-        // },
         {
             id: 'name',
             header: 'Nama',
@@ -118,7 +121,16 @@ function columnRefs(
                                 }}>
                                     <QrCode /> Kode QR
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => toast.error('Sertifikat belum tersedia')}>
+                                <DropdownMenuItem onClick={() => {
+                                    if (row.original.certificate) {
+                                        setCertData({
+                                            name: row.original.name,
+                                            number: toFourDigit(row.original.certificate.id)
+                                        })
+                                    } else {
+                                        toast.error('Sertifikat belum tersedia')
+                                    }
+                                }}>
                                     <Medal /> Sertifikat
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -139,14 +151,19 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 type Props = {
     participants: Paginated<Participant>
-    levels: Level[]
+    levels: Level[],
+    certificateConfig: CertificateConfig
 }
 
-export default ({ participants, levels }: Props) => {
+export default ({ participants, levels, certificateConfig }: Props) => {
     const [qr, setQr] = useState<string>();
     const [qrOwner, setQrOwner] = useState('');
 
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+    const [certData, setCertData] = useState<{
+        number: string;
+        name: string;
+    }>();
 
     useEffect(() => {
         const columnVisibilityCache = localStorage.getItem('participantColumns')
@@ -174,8 +191,33 @@ export default ({ participants, levels }: Props) => {
         )
     }, [columnVisibility])
 
+    useEffect(() => {
+        if (certData) {
+            downloadCert(certData.name).then(() => {
+                setCertData(undefined)
+            }).catch((err) => {
+                console.error('Download error:', err);
+            })
+        }
+    }, [certData]);
 
-    const columns = columnRefs(qr, setQr, setQrOwner)
+    const certificateRef = useRef<HTMLDivElement>(null);
+
+    const downloadCert = async (name: string) => {
+        if (certificateRef.current === null || certData === undefined) return;
+
+        // Berikan waktu ekstra bagi browser untuk memastikan font ter-load
+        const dataUrl = await toPng(certificateRef.current, {
+            cacheBust: true
+        });
+
+        const link = document.createElement('a');
+        link.download = `SERTIFIKAT ${name.toUpperCase()}.png`;
+        link.href = dataUrl;
+        link.click();
+    };
+
+    const columns = columnRefs(setQr, setQrOwner, setCertData, downloadCert)
 
     const table = useReactTable({
         data: participants.data,
@@ -194,6 +236,18 @@ export default ({ participants, levels }: Props) => {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Daftar Peserta" />
+            <Certificate
+                ref={certificateRef}
+                backgroundUrl={certificateConfig.backgroundUrl}
+                certificateNumber={{
+                    ...certificateConfig.certificateNumber,
+                    value: certData?.number || ''
+                }}
+                participantName={{
+                    ...certificateConfig.participantName,
+                    value: capitalizeWords(certData?.name?.toUpperCase() || '', true)
+                }}
+            />
             <TableFilter levels={levels} table={{ ...table }} />
             <DataTable columns={columns} table={{ ...table }} />
             <DataTablePagination pagination={participants} />

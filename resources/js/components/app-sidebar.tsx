@@ -46,7 +46,7 @@ export function AppSidebar() {
                 icon: Users
             },
             {
-                title: 'Presensi',
+                title: 'Scan Kode Presensi',
                 href: presence.index().url,
                 icon: QrCode
             },

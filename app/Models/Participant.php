@@ -12,4 +12,9 @@ class Participant extends Model
     {
         return $this->belongsTo(Invoice::class);
     }
+
+    public function certificate()
+    {
+        return $this->hasOne(Certificate::class);
+    }
 }

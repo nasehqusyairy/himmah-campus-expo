@@ -3,6 +3,7 @@ import { ItemGroup } from '@/components/ui/item';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
 import participants from '@/routes/participants';
+import presence from '@/routes/presence';
 import registration from '@/routes/registration';
 import validating from '@/routes/validating';
 import { SharedData, type BreadcrumbItem } from '@/types';
@@ -33,7 +34,12 @@ const adminTasks: Task[] = [
         title: "Periksa Pendaftaran",
         description: "Buka Halaman Validasi Pendaftaran",
         url: validating.index().url
-    }
+    },
+    {
+        title: "Lakukan Presensi",
+        description: "Buka Halaman Presensi",
+        url: presence.index().url
+    },
 ]
 
 type Props = {

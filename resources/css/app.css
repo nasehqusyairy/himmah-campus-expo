@@ -127,7 +127,7 @@
         @apply border-border;
     }
 
-    html{
+    html {
         scroll-behavior: smooth;
     }
 
@@ -156,8 +156,10 @@
         -webkit-text-fill-color: transparent;
     }
 
-    #qr-shaded-region{
-        aspect-ratio: 1/1!important;
-        height: unset!important;
+    #qr-shaded-region {
+        aspect-ratio: 1/1 !important;
+        height: unset !important;
+        border-width: 34px !important;
+        border-top-width: 10px;
     }
 }
