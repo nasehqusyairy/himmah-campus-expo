@@ -122,7 +122,7 @@ function columnRefs(
                                     <QrCode /> Kode QR
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => {
-                                    if (row.original.certificate) {
+                                    if (row.original.certificate && row.original.present_at) {
                                         setCertData({
                                             name: row.original.name,
                                             number: toFourDigit(row.original.certificate.id)
