@@ -27,8 +27,8 @@ class UpdateUserIdentityRequest extends FormRequest
                 'string',
                 'min:10',
                 'max:20',
-                Rule::unique('invoices', 'wa')
-                    ->where(fn($query) => $query->where('user_id', '!=', $userId)),
+                // Rule::unique('invoices', 'wa')
+                //     ->where(fn($query) => $query->where('user_id', '!=', $userId)),
             ],
         ];
     }
