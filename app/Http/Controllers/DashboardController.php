@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 // use App\Models\Views\ViewAlumni;
+use App\Models\Views\ViewParticipantsPresent;
+use App\Models\Views\ViewParticipantsAbsent;
 use App\Models\Views\ViewAlumniDelegation;
 use App\Models\Views\ViewCollage;
 use App\Models\Views\ViewNeedValidation;
@@ -24,6 +26,14 @@ class DashboardController extends Controller
             //     'label' => 'Alumni',
             //     'total' => ViewAlumni::count('*'),
             // ],
+            [
+                'label' => 'Hadir',
+                'total' => ViewParticipantsPresent::count('*'),
+            ],
+            [
+                'label' => 'Belum Hadir',
+                'total' => ViewParticipantsAbsent::count('*'),
+            ],
             [
                 'label' => 'Delegasi Alumni',
                 'total' => ViewAlumniDelegation::count('*'),
