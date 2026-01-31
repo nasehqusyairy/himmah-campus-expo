@@ -1,6 +1,7 @@
 import Certificate, { CertificateConfig } from "@/components/certificate";
 import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
+import LevelSelect from "@/components/level-select";
 import QRDialog from "@/components/qr-dialog";
 import TableFilter from "@/components/table-filter";
 import { Badge } from "@/components/ui/badge";
@@ -12,10 +13,11 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import AppLayout from "@/layouts/app-layout"
 import { capitalizeWords, toFourDigit } from "@/lib/utils";
-import participants from "@/routes/participants";
+import participantsRoute from "@/routes/participants";
 import {
     BreadcrumbItem,
     Level,
@@ -30,11 +32,14 @@ import {
     useReactTable,
     VisibilityState
 } from "@tanstack/react-table";
+import axios from "axios";
 import { toPng } from "html-to-image";
 import {
     Download,
     Medal,
-    QrCode
+    Plus,
+    QrCode,
+    X
 } from "lucide-react";
 import {
     Dispatch,
@@ -148,7 +153,7 @@ function columnRefs(
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Daftar Peserta',
-        href: participants.index().url,
+        href: participantsRoute.index().url,
     },
 ];
 
@@ -160,10 +165,22 @@ type Props = {
 
 export default ({ participants, levels, certificateConfig }: Props) => {
 
+    const [isCreating, setIsCreating] = useState(false);
+
     const { auth } = usePage<SharedData>().props
 
     const [qr, setQr] = useState<string>();
     const [qrOwner, setQrOwner] = useState('');
+
+    const [lvl, setLvl] = useState<number>();
+    const [name, setName] = useState('');
+    const [names, setNames] = useState<string[]>([]);
+    const [agency, setAgency] = useState('');
+    const [wa, setWa] = useState('');
+
+    const removeParticipant = (n: string) => {
+        setNames(names.filter(el => el !== n))
+    }
 
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
     const [certData, setCertData] = useState<{
@@ -261,14 +278,55 @@ export default ({ participants, levels, certificateConfig }: Props) => {
                     </DialogTrigger>
                     <DialogContent>
                         <DialogTitle>Tambahkan Peserta</DialogTitle>
-                        <Form>
+                        <form>
+                            <LevelSelect onChange={setLvl} value={lvl} options={levels} />
                             <div className="mb-4">
-                                <Label></Label>
+                                <Label htmlFor="agency">Nama Instansi</Label>
+                                <Input name="agency" id="agency" value={agency} onChange={e => setAgency(e.target.value)} />
                             </div>
-                        </Form>
+                            <div className="mb-4">
+                                <Label htmlFor="wa">No. WhatsApp</Label>
+                                <Input name="wa" type="number" id="wa" value={wa} onChange={e => setWa(e.target.value)} />
+                            </div>
+                        </form>
+                        <form className="mb-4" onSubmit={(evt) => {
+                            evt.preventDefault()
+                            setNames([...names, name])
+                            setName('')
+                        }}>
+                            <Label htmlFor="name">Nama Lengkap</Label>
+                            <div className="flex gap-2">
+                                <Input id="name" name="name" value={name} onChange={(evt) => setName(evt.target.value.toUpperCase())} />
+                                <div>
+                                    <Button type="submit" size={"icon"}><Plus /></Button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div className="">
+                            {names.map(el => (
+                                <div key={el} className="flex justify-between items-center py-2 border-b">
+                                    <span>{el}</span>
+                                    <Button variant={"destructive"} size={"icon"} onClick={() => removeParticipant(el)}><X /></Button>
+                                </div>
+                            ))}
+                        </div>
                         <DialogFooter>
-                            <Button>
-                                Simpan
+                            <Button disabled={isCreating} onClick={() => {
+                                if (lvl && agency && wa && names) {
+                                    setIsCreating(true)
+                                    axios.post(participantsRoute.store().url, { level_id: lvl, agency, wa, names }).then(e => {
+                                        toast.success('Berhasil ditambahkan, mereload...')
+                                        window.location.reload()
+                                    }).catch(() => {
+                                        toast.error('Terjadi kesalahan')
+                                        setIsCreating(false)
+                                    })
+                                } else {
+                                    toast.error('Data tidak lengkap')
+                                }
+                            }}>
+                                {isCreating ? 'Menambahkan...' : 'Tambahkan'}
                             </Button>
                         </DialogFooter>
                     </DialogContent>

@@ -22,7 +22,7 @@ export default function LevelSelect({ value, options = [], onChange }: Props) {
     return (
         <div className="mb-4">
             <Label htmlFor="level_id">Jenis Instansi</Label>
-            <Select value={value?.toString()} onValueChange={(val) => onChange(Number(val))}>
+            <Select value={value?.toString()} onValueChange={(val) => onChange(Number(val))} name="level_id">
                 <SelectTrigger id="level_id" className="hover:bg-accent hover:text-accent-foreground!">
                     <SelectValue placeholder="Pilih jenis instansi..." />
                 </SelectTrigger>

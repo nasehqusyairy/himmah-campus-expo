@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Agency;
+use App\Models\Invoice;
 use App\Models\Level;
 use App\Models\Participant;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class ParticipantController extends Controller
@@ -15,6 +19,7 @@ class ParticipantController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
         $search   = request('search', '');
         $level_id = request('level', '');
         $level_id = $level_id === 'all' ? '' : $level_id;
@@ -25,7 +30,7 @@ class ParticipantController extends Controller
             })
 
             // Batasi data jika role = user (misal role_id = 2)
-            ->when(Auth::user()->role_id === 2, function ($q) {
+            ->when($user->role_id === 2, function ($q) {
                 $q->whereHas('invoice', function ($q) {
                     $q->where('user_id', Auth::id());
                 });
@@ -61,7 +66,40 @@ class ParticipantController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = User::create([
+            'name' => $request->get('agency'),
+            'email' => Str::snake($request->get('agency')) . "@gmail.com",
+            'password' => 'password',
+            'email_verified_at' => now()
+        ]);
+        $user->step()->update([
+            'last' => 3
+        ]);
+        $invoice =  $user->invoice()->create([
+            'wa' => $request->get('wa'),
+            'verified_at' => now()
+        ]);
+        $invoice->agency()->firstOrCreate([
+            'name' => $request->get('agency'),
+            'level_id' => $request->get('level_id')
+        ]);
+        $participants = $invoice->participants()->createMany(collect($request->get('names'))->map(function ($value) {
+            return [
+                'name' => $value,
+                'presence_token' => Str::random(20),
+                'present_at' => now()
+            ];
+        })->toArray());
+
+        $participants->each(function ($p) {
+            $p->certificate()->firstOrCreate([
+                'participant_id' => $p->id
+            ]);
+        });
+
+        return response()->json([
+            'data' => $participants->load('invoice.agency.level')
+        ]);
     }
 
     /**

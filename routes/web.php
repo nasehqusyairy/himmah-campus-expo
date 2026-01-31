@@ -36,6 +36,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('participants')->group(function () {
         Route::get('/', [ParticipantController::class, 'index'])->name('participants.index');
+        Route::post('/store', [ParticipantController::class, 'store'])->name('participants.store');
     });
 
     Route::middleware(AdminOnly::class)->prefix('presence')->group(function () {
