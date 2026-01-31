@@ -271,7 +271,7 @@ export default ({ participants, levels, certificateConfig }: Props) => {
                     value: capitalizeWords(certData?.name?.toUpperCase() || '', true)
                 }}
             />
-            {auth.user.role_id === 1 && (
+            {auth.user.role_id == 1 && (
                 <Dialog>
                     <DialogTrigger asChild className="mb-4 w-full lg:w-auto">
                         <Button>Tambahkan Peserta</Button>
