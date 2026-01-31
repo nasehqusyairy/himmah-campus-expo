@@ -169,6 +169,9 @@ export default ({ participants, levels, certificateConfig }: Props) => {
 
     const { auth } = usePage<SharedData>().props
 
+    console.log(auth.user);
+
+
     const [qr, setQr] = useState<string>();
     const [qrOwner, setQrOwner] = useState('');
 
