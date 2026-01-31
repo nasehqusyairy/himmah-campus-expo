@@ -20,6 +20,9 @@ class ParticipantController extends Controller
         $level_id = $level_id === 'all' ? '' : $level_id;
         $participants = Participant::with('invoice.agency.level', 'certificate')
             ->where('name', 'like', "%$search%")
+            ->orWhereHas('invoice.agency', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
+            })
 
             // Batasi data jika role = user (misal role_id = 2)
             ->when(Auth::user()->role_id === 2, function ($q) {

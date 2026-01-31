@@ -27,6 +27,10 @@ class ValidatingController extends Controller
             ->where('users.name', 'like', "%$search%")
             ->where('users.role_id', 2)
 
+            ->orWhereHas('invoice.agency', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
+            })
+
             ->when($level_id, function ($query) use ($level_id) {
                 $query->whereHas('invoice.agency.level', function ($q) use ($level_id) {
                     $q->where('levels.id', $level_id);

@@ -5,12 +5,14 @@ import QRDialog from "@/components/qr-dialog";
 import TableFilter from "@/components/table-filter";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import { Label } from "@/components/ui/label";
 import AppLayout from "@/layouts/app-layout"
 import { capitalizeWords, toFourDigit } from "@/lib/utils";
 import participants from "@/routes/participants";
@@ -18,9 +20,10 @@ import {
     BreadcrumbItem,
     Level,
     Paginated,
-    Participant
+    Participant,
+    SharedData
 } from "@/types";
-import { Head } from "@inertiajs/react";
+import { Form, Head, usePage } from "@inertiajs/react";
 import {
     ColumnDef,
     getCoreRowModel,
@@ -156,6 +159,9 @@ type Props = {
 }
 
 export default ({ participants, levels, certificateConfig }: Props) => {
+
+    const { auth } = usePage<SharedData>().props
+
     const [qr, setQr] = useState<string>();
     const [qrOwner, setQrOwner] = useState('');
 
@@ -248,6 +254,26 @@ export default ({ participants, levels, certificateConfig }: Props) => {
                     value: capitalizeWords(certData?.name?.toUpperCase() || '', true)
                 }}
             />
+            {auth.user.role_id === 1 && (
+                <Dialog>
+                    <DialogTrigger asChild className="mb-4 w-full lg:w-auto">
+                        <Button>Tambahkan Peserta</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogTitle>Tambahkan Peserta</DialogTitle>
+                        <Form>
+                            <div className="mb-4">
+                                <Label></Label>
+                            </div>
+                        </Form>
+                        <DialogFooter>
+                            <Button>
+                                Simpan
+                            </Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            )}
             <TableFilter levels={levels} table={{ ...table }} />
             <DataTable columns={columns} table={{ ...table }} />
             <DataTablePagination pagination={participants} />
